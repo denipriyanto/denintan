@@ -9,11 +9,11 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Undangan Pernikahan Deni & Intan",
         description: "Wedding Invitations Deni - Intan, 25 Juni 2025",
-        url: "https://denintan.dellfoks.com", // Ganti dengan URL aslinya
+        url: "https://denintan.vercel.app", // Ganti dengan URL aslinya
         siteName: "Undangan Deni & Intan",
         images: [
             {
-                url: "/denintan.jpg", // pastikan berada di public/
+                url: "/denintan-ultimate.jpg", // pastikan berada di public/
                 width: 1200,
                 height: 630,
                 alt: "Undangan Deni & Intan",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Undangan Pernikahan Deni & Intan",
         description: "Wedding Invitations Deni - Intan, 25 Juni 2025",
-        images: ["/denintan.jpg"],
+        images: ["/denintan-ultimat.jpg"],
     },
 };
 
