@@ -134,7 +134,6 @@ export default function Open() {
             });
 
             if (res.ok) {
-                setBerhasil(true);
                 setName("");
                 setMessage("");
 
@@ -143,6 +142,7 @@ export default function Open() {
                 alert("Gagal mengirim ucapan.");
             }
         } catch (err) {
+            console.log(err);
             alert("Terjadi kesalahan.");
         } finally {
             setLoading(false);
