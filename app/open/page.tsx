@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import TilesGallery from "../components/TilesGallery";
 import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -536,7 +535,6 @@ export default function Open() {
                             ref={box4Ref}
                             className="flex flex-col items-start justify-start min-h-100svh pt-107 relative z-30"
                         >
-                            <TilesGallery />
                             <p className="text-16 font-medium uppercase leading-[1.28] max-lg:mb-2 ">
                                 berlanjut dengan acara
                             </p>
