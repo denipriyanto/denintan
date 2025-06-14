@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import TilesGallery from "../components/TilesGallery";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -445,6 +446,7 @@ export default function Open() {
                 </div>
                 <div id="event">
                     <div className="relative pointer-events-none w-full px-16">
+                        <TilesGallery />
                         <div className="gradient-home-cover-middle z-10"></div>
                         <div className="gradient-home-cover-top-left"></div>
                         <div
