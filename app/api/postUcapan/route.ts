@@ -18,8 +18,11 @@ export async function POST(request: Request) {
             headers: { "Content-Type": "application/json" },
         });
     } catch (err) {
-        return new Response(JSON.stringify({ error: "Gagal mengirim data" }), {
-            status: 500,
-        });
+        return new Response(
+            JSON.stringify({ error: "Gagal mengirim data", err }),
+            {
+                status: 500,
+            }
+        );
     }
 }
