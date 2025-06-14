@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
 import TilesGallery from "./components/TilesGallery";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { useSearchParams } from "next/navigation";
 import { useAudio } from "./context/audioContext";
+import DisplayName from "./components/DisplayName";
+import { Suspense } from "react";
 
 export default function Home() {
     const textRef = useRef<HTMLDivElement>(null);
@@ -17,8 +18,6 @@ export default function Home() {
     const invTitle = `Wedding Invitation`;
     const buttonRef = useRef<HTMLDivElement>(null);
     const opacityRef = useRef<HTMLDivElement>(null);
-    const searchParams = useSearchParams();
-    const [displayName, setDisplayName] = useState("...");
 
     useEffect(() => {
         gsap.fromTo(
@@ -98,15 +97,7 @@ export default function Home() {
         );
 
         gsap.to(opacityRef.current, { opacity: 1 });
-
-        const name = searchParams.get("for");
-
-        if (name) {
-            setDisplayName(decodeURIComponent(name));
-        } else {
-            setDisplayName("Tamu");
-        }
-    }, [searchParams]);
+    }, []);
 
     const { togglePlay } = useAudio();
 
@@ -212,7 +203,9 @@ export default function Home() {
                                     </span>
                                 </span>
                                 <span className="my-auto grow" dir="ltr">
-                                    {displayName}
+                                    <Suspense fallback={<div>Loading...</div>}>
+                                        <DisplayName />
+                                    </Suspense>
                                 </span>
                             </a>
                         </div>
