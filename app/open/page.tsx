@@ -23,7 +23,7 @@ export default function Open() {
 
     const [name, setName] = useState("");
     const [message, setMessage] = useState("");
-    const [status, setStatus] = useState("");
+    const [status] = useState("");
     const [loading, setLoading] = useState(false);
 
     // Audio Effect
@@ -895,7 +895,6 @@ export default function Open() {
                                     onChange={(e) => setName(e.target.value)}
                                     required
                                     className="mt-2 w-full group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-48 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white/10 text-white backdrop-blur-[8px] sm:w-full"
-                                    placeholder="Nama..."
                                 />
                             </div>
                             <p className="text-center text-sm text-gray-600">
