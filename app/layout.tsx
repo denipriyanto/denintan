@@ -8,25 +8,23 @@ export const metadata: Metadata = {
     description: "Wedding Invitations Deni - Intan, 25 Juni 2025",
     openGraph: {
         title: "Undangan Pernikahan Deni & Intan",
-        description: "Wedding Invitations Deni - Intan, 25 Juni 2025",
-        url: "https://denintan.vercel.app", // Ganti dengan URL aslinya
-        siteName: "Undangan Deni & Intan",
+        description: "Wedding Invitations Deni - Intan 25 Juni 2025",
+        url: "https://denintan.vercel.app",
+        type: "website",
         images: [
             {
-                url: "/denintan-ultimate.jpg", // pastikan berada di public/
+                url: "https://denintan.vercel.app/denintan-ultimate.jpg", // HARUS FULL URL dan TERPUBLISH
                 width: 1200,
                 height: 630,
-                alt: "Undangan Deni & Intan",
+                alt: "Undangan Pernikahan Deni & Intan",
             },
         ],
-        locale: "id_ID",
-        type: "website",
     },
     twitter: {
         card: "summary_large_image",
         title: "Undangan Pernikahan Deni & Intan",
-        description: "Wedding Invitations Deni - Intan, 25 Juni 2025",
-        images: ["/denintan-ultimate.jpg"],
+        description: "Wedding Invitations Deni - Intan 25 Juni 2025",
+        images: ["https://denintan.vercel.app/denintan-ultimate.jpg"],
     },
 };
 
