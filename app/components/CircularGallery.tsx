@@ -22,7 +22,7 @@ const images = [
 
 const CircularGallery = () => {
     const containerRef = useRef(null);
-    const itemRefs = useRef([]);
+    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const total = images.length;
     const radius = 150;
 
@@ -68,7 +68,9 @@ const CircularGallery = () => {
                         <div
                             key={i}
                             className="absolute"
-                            ref={(el) => (itemRefs.current[i] = el)}
+                            ref={(el) => {
+                                itemRefs.current[i] = el;
+                            }}
                         >
                             <div className="w-28 h-40 bg-white/10 rounded-xl backdrop-blur-md border border-white/20 flex items-center justify-center">
                                 <img
