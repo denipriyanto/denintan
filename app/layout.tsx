@@ -5,10 +5,10 @@ import { AudioProvider } from "./context/audioContext";
 
 export const metadata: Metadata = {
     title: "The Wedding of Intan dan Deni - Dellfoks Invitations",
-    description: "Wedding Invitations Deni - Intan, 25 Juni 2025",
+    description: "Wedding Invitations Deni - Intan, 22 Juni 2025",
     openGraph: {
         title: "Undangan Pernikahan Deni & Intan",
-        description: "Wedding Invitations Deni - Intan 25 Juni 2025",
+        description: "Wedding Invitations Deni - Intan 22 Juni 2025",
         url: "https://denintan.vercel.app",
         type: "website",
         images: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Undangan Pernikahan Deni & Intan",
-        description: "Wedding Invitations Deni - Intan 25 Juni 2025",
+        description: "Wedding Invitations Deni - Intan 22 Juni 2025",
         images: ["https://denintan.vercel.app/denintan-ultimate.jpg"],
     },
 };
