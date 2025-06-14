@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Undangan Pernikahan Deni & Intan",
         description: "Wedding Invitations Deni - Intan, 25 Juni 2025",
-        images: ["/denintan-ultimat.jpg"],
+        images: ["/denintan-ultimate.jpg"],
     },
 };
 
