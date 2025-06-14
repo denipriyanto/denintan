@@ -122,7 +122,9 @@ export default function Home() {
                         {textTitle.split("").map((char, i) => (
                             <span
                                 key={i}
-                                ref={(el) => el && (charRefs.current[i] = el)}
+                                ref={(el) => {
+                                    if (el) charRefs.current[i] = el;
+                                }}
                                 className="inline-block whitespace-pre"
                             >
                                 {char}
@@ -133,7 +135,9 @@ export default function Home() {
                         {invTitle.split("").map((char, i) => (
                             <span
                                 key={i}
-                                ref={(el) => el && (charRefs2.current[i] = el)}
+                                ref={(el) => {
+                                    if (el) charRefs2.current[i] = el;
+                                }}
                                 className="inline-block whitespace-pre"
                             >
                                 {char}
