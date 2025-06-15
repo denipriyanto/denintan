@@ -973,15 +973,18 @@ export default function Open() {
                             </div>
                         </form>
                     </div>
-                    <div className="mb-8 px-16 h-64 overflow-hidden rounded-16 bg-white/10 text-white backdrop-blur-[8px] p-2">
+                    <div className="mb-8 px-16 h-64 overflow-hidden min-h-100svh overflow-scroll rounded-16 bg-white/10 text-white backdrop-blur-[8px] p-2">
                         <div className="flex flex-col items-center gap-2">
                             {data.map((item, idx) => (
-                                <div
-                                    className="animate-marquee-vertical"
-                                    key={idx}
-                                >
-                                    <button className="group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-48 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white text-gray-800 w-full">
-                                        <span className="relative inline-block aspect-square h-full overflow-hidden rounded-12 bg-gray-300">
+                                <div className="" key={idx}>
+                                    <button
+                                        className="group/button pointer-events-auto disabled:cursor-not-allowed 
+    outline outline-0 outline-offset-2 outline-[var(--outline-color)] 
+    focus-visible:outline-2 inline-flex items-start gap-x-4 
+    rounded-16 py-4 pl-4 pr-6 text-left text-11 font-medium uppercase 
+    leading-[1.328] bg-white text-gray-800 w-full h-auto"
+                                    >
+                                        <span className="relative inline-block aspect-square w-12 min-w-12 overflow-hidden rounded-12 bg-gray-300">
                                             <span className="absolute inset-0 inline-flex items-center justify-center">
                                                 <i
                                                     className="inline-flex not-italic h-16"
