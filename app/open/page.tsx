@@ -973,10 +973,10 @@ export default function Open() {
                             </div>
                         </form>
                     </div>
-                    <div className="mb-8 px-16 h-64 overflow-hidden min-h-100svh overflow-scroll rounded-16 bg-white/10 text-white backdrop-blur-[8px] p-2">
+                    <div className="mb-8 px-16 min-h-100svh overflow-scroll rounded-16 bg-white/10 text-white backdrop-blur-[8px] p-2">
                         <div className="flex flex-col items-center gap-2">
                             {data.map((item, idx) => (
-                                <div className="" key={idx}>
+                                <div className="overflow-scroll" key={idx}>
                                     <button
                                         className="group/button pointer-events-auto disabled:cursor-not-allowed 
     outline outline-0 outline-offset-2 outline-[var(--outline-color)] 
