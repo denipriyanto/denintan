@@ -527,7 +527,7 @@ export default function Open() {
                     playsInline
                     className="w-full h-full object-cover"
                 >
-                    <source src="/PREWED_VIDEO.MOV" type="video/mp4" />
+                    <source src="/PREWED_VIDEO.MP4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
                 <div
