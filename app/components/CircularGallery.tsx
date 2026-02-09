@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import "./CircularGallery.css";
+import Image from "next/image";
 
 gsap.registerPlugin(MotionPathPlugin);
 
@@ -73,10 +74,13 @@ const CircularGallery = () => {
                             }}
                         >
                             <div className="w-28 h-40 bg-white/10 rounded-xl backdrop-blur-md border border-white/20 flex items-center justify-center">
-                                <img
+                                <Image
                                     src={src}
                                     alt={`lip-${i}`}
-                                    className="w-10 h-24 object-contain"
+                                    width={40} // Sesuai dengan w-10 (10 * 4px = 40px)
+                                    height={96} // Sesuai dengan h-24 (24 * 4px = 96px)
+                                    className="object-contain"
+                                    priority={i < 4} // Optimasi SEO: gambar pertama dimuat lebih cepat
                                 />
                             </div>
                         </div>
@@ -105,10 +109,13 @@ const CircularGallery = () => {
                             }}
                         >
                             <div className="w-28 h-40 rounded-xl flex items-center justify-center">
-                                <img
+                                <Image
                                     src={src}
                                     alt={`lip-${index}`}
                                     className="w-10 h-24 object-contain"
+                                    width={40}
+                                    height={96}
+                                    priority={index < 4}
                                 />
                             </div>
                         </div>
