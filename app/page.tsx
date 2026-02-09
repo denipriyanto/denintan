@@ -16,7 +16,7 @@ export async function generateMetadata({
     const brandName = "Mantenan App";
     const weddingNames = "Enda & Mawan";
     const weddingDate = "19 April 2026";
-    const baseUrl = "https://mantenan.vercel.app";
+    const baseUrl = "https://endamawan-mantenan.vercel.app/";
 
     return {
         title: `${weddingNames} Wedding ${guestName} - ${brandName}`,
