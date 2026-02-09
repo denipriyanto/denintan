@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { useAudio } from "./context/audioContext";
 import DisplayName from "./components/DisplayName";
 import { Suspense } from "react";
+import { Mail, MailOpen } from "lucide-react";
 
 export default function Home() {
     const textRef = useRef<HTMLDivElement>(null);
@@ -14,7 +15,7 @@ export default function Home() {
     charRefs.current = [];
     const charRefs2 = useRef<HTMLSpanElement[]>([]);
     charRefs2.current = [];
-    const textTitle = "Intan & Deni";
+    const textTitle = "Enda & Mawan";
     const invTitle = `Wedding Invitation`;
     const buttonRef = useRef<HTMLDivElement>(null);
     const opacityRef = useRef<HTMLDivElement>(null);
@@ -99,6 +100,34 @@ export default function Home() {
         gsap.to(opacityRef.current, { opacity: 1 });
     }, []);
 
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline();
+
+            // Reveal Nama Tamu (Card)
+            tl.from(".recipient-card", {
+                y: 40,
+                opacity: 0,
+                duration: 1.5,
+                ease: "power4.out",
+                delay: 0.5,
+            })
+                // Reveal Button Buka Undangan
+                .from(
+                    ".invitation-btn",
+                    {
+                        y: 20,
+                        opacity: 0,
+                        duration: 1,
+                        ease: "power3.out",
+                    },
+                    "-=1"
+                ); // Start sedikit barengan
+        }, buttonRef);
+
+        return () => ctx.revert();
+    }, []);
+
     const { togglePlay } = useAudio();
 
     const handleClick = () => {
@@ -109,7 +138,7 @@ export default function Home() {
         <div className="max-h-dvh overflow-hidden">
             <main ref={opacityRef} style={{ opacity: 0 }}>
                 <div className="space-y-custom flex-col px-4 text-center text-white center min-h-100svh [--mt:theme(spacing.20)] sm:[--mt:theme(spacing.40)]">
-                    <h1 className="text-balance text-78 font-medium uppercase leading-none sm:h-[1cap] sm:text-90 lg:text-fluid-lg-design-null-118">
+                    <h1 className="text-balance text-center text-78 font-medium uppercase leading-none sm:h-[1cap] sm:text-90 lg:text-fluid-lg-design-null-118">
                         {textTitle.split("").map((char, i) => (
                             <span
                                 key={i}
@@ -146,126 +175,67 @@ export default function Home() {
                             hari istimewa kami.
                         </span>
                     </p>
+
                     <div
-                        className="flex flex-col gap-x-80 gap-y-25 [--mt:theme(spacing.40)] sm:[--mt:theme(spacing.51)] lg:[--mt:theme(spacing.65)]"
+                        className="flex flex-col items-center gap-y-12 w-full max-w-[320px] mx-auto mt-[var(--mt)]"
                         ref={buttonRef}
                     >
-                        <div className="z-10">
-                            <a
-                                href="#"
-                                className="group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-48 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white text-gray-800 w-full"
-                            >
-                                <span className="relative inline-block aspect-square h-full overflow-hidden rounded-12 bg-gray-300">
-                                    <span
-                                        className="absolute inset-0 inline-flex items-center justify-center"
-                                        style={{
-                                            transform: "translateX(-100%)",
-                                        }}
+                        {/* Slot Nama Tamu (The Recipient) */}
+                        <div className="w-full text-center space-y-4 recipient-card">
+                            <span className="text-[10px] uppercase tracking-[0.4em] text-white/40 block">
+                                Dear, Special Guest
+                            </span>
+
+                            {/* Nama Tamu dengan Style Glass Card */}
+                            <div className="relative py-6 px-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md overflow-hidden">
+                                {/* Dekorasi Garis Halus ala Editorial */}
+                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-4 bg-white/20"></div>
+
+                                <div className="caslon-font text-2xl md:text-3xl italic text-white tracking-wide">
+                                    <Suspense
+                                        fallback={
+                                            <div className="animate-pulse opacity-20">
+                                                Loading...
+                                            </div>
+                                        }
                                     >
-                                        <i
-                                            className="inline-flex not-italic h-16"
-                                            aria-hidden="true"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="1.5"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
-                                                />
-                                            </svg>
-                                        </i>
-                                    </span>
-                                    <span className="absolute inset-0 inline-flex items-center justify-center">
-                                        <i
-                                            className="inline-flex not-italic h-16"
-                                            aria-hidden="true"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="1.5"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
-                                                />
-                                            </svg>
-                                        </i>
-                                    </span>
-                                </span>
-                                <span className="my-auto grow" dir="ltr">
-                                    <Suspense fallback={<div>Loading...</div>}>
                                         <DisplayName />
                                     </Suspense>
-                                </span>
-                            </a>
+                                </div>
+
+                                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-4 bg-white/20"></div>
+                            </div>
                         </div>
-                        <div className="z-10">
+
+                        {/* Tombol Buka Undangan (Seragam dengan Style Pill Anda) */}
+                        <div className="z-10 w-full group invitation-btn">
                             <Link
                                 onClick={handleClick}
                                 href="open"
-                                className="group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-48 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white/10 text-white backdrop-blur-[8px] w-full"
+                                className="group/button relative flex h-14 w-full items-center justify-between overflow-hidden rounded-full bg-white px-2 py-2 transition-all duration-500 hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(255,255,255,0.1)]"
                             >
-                                <span className="relative inline-block aspect-square h-full overflow-hidden rounded-12 bg-white/10">
-                                    <span
-                                        className="absolute inset-0 inline-flex items-center justify-center"
-                                        style={{
-                                            transform: "translateX(-100%)",
-                                        }}
-                                    >
-                                        <i
-                                            className="inline-flex not-italic h-16"
-                                            aria-hidden="true"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="1.5"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844a2.25 2.25 0 0 1 1.183-1.981l7.5-4.039a2.25 2.25 0 0 1 2.134 0l7.5 4.039a2.25 2.25 0 0 1 1.183 1.98V19.5Z"
-                                                />
-                                            </svg>
-                                        </i>
-                                    </span>
-                                    <span className="absolute inset-0 inline-flex items-center justify-center">
-                                        <i
-                                            className="inline-flex not-italic h-16"
-                                            aria-hidden="true"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="1.5"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844a2.25 2.25 0 0 1 1.183-1.981l7.5-4.039a2.25 2.25 0 0 1 2.134 0l7.5 4.039a2.25 2.25 0 0 1 1.183 1.98V19.5Z"
-                                                />
-                                            </svg>
-                                        </i>
-                                    </span>
-                                </span>
-                                <span className="my-auto grow" dir="ltr">
-                                    buka undangan
+                                {/* Lingkaran Ikon - Identik dengan Button Map & Gift */}
+                                <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-black text-white transition-transform duration-700 group-hover/button:rotate-[360deg]">
+                                    <Mail
+                                        size={18}
+                                        className="absolute transition-all duration-500 group-hover/button:translate-y-[-150%]"
+                                    />
+                                    <MailOpen
+                                        size={18}
+                                        className="absolute translate-y-[150%] transition-all duration-500 group-hover/button:translate-y-0 text-white"
+                                    />
+                                </div>
+
+                                {/* Teks Tombol */}
+                                <span className="flex-1 pr-4 text-center text-11 font-bold uppercase tracking-[0.2em] text-black">
+                                    Buka Undangan
                                 </span>
                             </Link>
+
+                            {/* Text Hint Kecil di Bawah */}
+                            <p className="text-[9px] text-center text-white/30 uppercase tracking-[0.2em] mt-6 animate-pulse">
+                                Tap to Reveal Journey
+                            </p>
                         </div>
                     </div>
                 </div>

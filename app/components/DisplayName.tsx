@@ -8,7 +8,7 @@ export default function DisplayName() {
     const [displayName, setDisplayName] = useState("Tamu");
 
     useEffect(() => {
-        const nameParam = searchParams.get("for");
+        const nameParam = searchParams.get("to");
         if (nameParam && nameParam.trim() !== "") {
             setDisplayName(decodeURIComponent(nameParam));
         } else {

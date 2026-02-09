@@ -2,8 +2,9 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
-import TilesGallery from "../components/TilesGallery";
+import { Copy, Check, Send, Gift, Heart, Instagram } from "lucide-react";
+import FloatingNav from "../components/FloatingNav";
+import Footer from "../components/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,66 +27,346 @@ export default function Open() {
     const [status] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const introSectionRef = useRef(null);
+    const containerProfileWomanRef = useRef(null);
+    const containerProfileManRef = useRef(null);
+    const brideRef = useRef(null);
+    const groomRef = useRef(null);
+
     // Audio Effect
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    const playNavAudio = () => {
-        const audio = audioRef.current;
-        if (audio) {
-            audio.currentTime = 71; // mulai di detik ke-70
-            audio.play();
+    // const playNavAudio = () => {
+    //     const audio = audioRef.current;
+    //     if (audio) {
+    //         audio.currentTime = 71; // mulai di detik ke-70
+    //         audio.play();
 
-            // Stop di detik ke-72 (setelah 2 detik)
-            setTimeout(() => {
-                audio.pause();
-            }, 2000);
-        }
-    };
+    //         // Stop di detik ke-72 (setelah 2 detik)
+    //         setTimeout(() => {
+    //             audio.pause();
+    //         }, 2000);
+    //     }
+    // };
 
-    // Box Section
+    // Slideshow
 
-    const box1Ref = useRef<HTMLDivElement>(null);
-    const box2Ref = useRef<HTMLDivElement>(null);
-    const box3Ref = useRef<HTMLDivElement>(null);
-    const box4Ref = useRef<HTMLDivElement>(null);
-    const box5Ref = useRef<HTMLDivElement>(null);
-    const box6Ref = useRef<HTMLDivElement>(null);
-    const box7Ref = useRef<HTMLDivElement>(null);
-    const box8Ref = useRef<HTMLDivElement>(null);
-
-    const sections = [
-        box1Ref,
-        box2Ref,
-        box3Ref,
-        box4Ref,
-        box5Ref,
-        box6Ref,
-        box7Ref,
-        box8Ref,
+    const images = [
+        "/ENDA_SLIDE_1.avif",
+        "/ENDA_SLIDE_2.avif",
+        "/ENDA_SLIDE_3.avif",
     ];
-    const [currentIndex, setCurrentIndex] = useState(0);
 
-    const scrollToIndex = (index: number) => {
-        if (sections[index]?.current) {
-            sections[index].current?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
+    const galleryImages = [
+        { src: "/endamawan6.avif", title: "The Beginning" },
+        { src: "/endamawan4.avif", title: "The Proposal" },
+        { src: "/endamawan14.avif", title: "Engagement" },
+        { src: "/endamawan7.avif", title: "Pre-Wedding" },
+        { src: "/endamawan1.avif", title: "Our Journey" },
+    ];
+
+    const sectionRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const section = sectionRef.current;
+        const trigger = triggerRef.current;
+
+        if (!section || !trigger) return;
+
+        const ctx = gsap.context(() => {
+            // Hitung total geser: lebar total konten minus lebar layar
+            const totalWidth = section.scrollWidth;
+            const windowWidth = window.innerWidth;
+
+            gsap.to(sectionRef.current, {
+                x: () => -(totalWidth - windowWidth),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: triggerRef.current,
+                    start: "top top",
+                    end: () => `+=${totalWidth}`, // Durasi scroll sesuai lebar konten
+                    scrub: 1,
+                    pin: true,
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true, // Re-kalkulasi jika layar diputar/resize
+                },
             });
-            setCurrentIndex(index);
-        }
-    };
+        }, triggerRef);
 
-    const handleNext = () => {
-        playNavAudio();
-        const next = Math.min(currentIndex + 1, sections.length - 1);
-        scrollToIndex(next);
-    };
+        return () => ctx.revert();
+    }, []);
 
-    const handlePrev = () => {
-        playNavAudio();
-        const prev = Math.max(currentIndex - 1, 0);
-        scrollToIndex(prev);
-    };
+    const giftRef = useRef(null);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            // 1. Animasi Teks & Button Pembuka
+            gsap.from(".gift-header > *", {
+                y: 30,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: giftRef.current,
+                    start: "top 85%",
+                },
+            });
+
+            // 2. Animasi Kartu Bank (Efek Floating Reveal)
+            gsap.from(".bank-card", {
+                scale: 0.8,
+                y: 100,
+                rotationX: 45, // Kartu seolah miring dari bawah
+                opacity: 0,
+                duration: 1.2,
+                stagger: 0.3,
+                ease: "power4.out",
+                scrollTrigger: {
+                    trigger: ".bank-card-container",
+                    start: "top 80%",
+                },
+            });
+        }, giftRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    const wishSectionRef = useRef(null);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            // 1. Reveal Judul & Form
+            gsap.from(".wish-header, .wish-form", {
+                y: 50,
+                opacity: 0,
+                duration: 1.2,
+                stagger: 0.3,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: wishSectionRef.current,
+                    start: "top 80%",
+                },
+            });
+
+            // 2. Reveal List Ucapan (Staggered)
+            gsap.from(".wish-card", {
+                x: -20,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: ".wish-list-container",
+                    start: "top 85%",
+                },
+            });
+        }, wishSectionRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const containerRef = useRef(null);
+    const bgSlideRef = useRef(null);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            gsap.from(introSectionRef.current, {
+                y: 50, // Mulai 50px di bawah
+                opacity: 0, // Mulai transparan
+                duration: 1.5, // Durasi animasi
+                ease: "power3.out", // Easing yang smooth dan natural
+                scrollTrigger: {
+                    trigger: introSectionRef.current,
+                    start: "top 80%", // Mulai animasi saat bagian ini 80% terlihat
+                    toggleActions: "play none none reverse", // Play saat masuk, reverse saat keluar
+                },
+            });
+
+            // Animasi terpisah untuk judul (stagger lebih halus)
+            gsap.from(".caslon-font", {
+                y: 30,
+                opacity: 0,
+                duration: 1.2,
+                delay: 0.3, // Sedikit delay setelah introSection muncul
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: introSectionRef.current,
+                    start: "top 80%",
+                    toggleActions: "play none none reverse",
+                },
+            });
+
+            // Animasi untuk paragraf (terakhir muncul)
+            gsap.from(".intro-paragraph", {
+                y: 30,
+                opacity: 0,
+                duration: 1.2,
+                delay: 0.6, // Delay setelah judul muncul
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: introSectionRef.current,
+                    start: "top 80%",
+                    toggleActions: "play none none reverse",
+                },
+            });
+        }, introSectionRef); // Pastikan context mengarah ke ref yang benar
+
+        return () => ctx.revert();
+    }, []);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            // Animasi Domino
+            gsap.from(".images-wrapper", {
+                y: 100, // Muncul dari bawah sejauh 100px
+                opacity: 0, // Mulai dari transparan
+                duration: 1.2, // Durasi per gambar
+                ease: "power4.out", // Easing yang halus ala Webflow
+                stagger: 0.3, // Jeda antar gambar (efek domino)
+                scrollTrigger: {
+                    trigger: containerProfileWomanRef.current,
+                    start: "top 40%", // Animasi mulai saat container 80% terlihat di layar
+                    toggleActions: "play none none reverse",
+                },
+            });
+        }, containerProfileWomanRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            // Animasi Domino
+            gsap.from(".images-wrapper", {
+                y: 100, // Muncul dari bawah sejauh 100px
+                opacity: 0, // Mulai dari transparan
+                duration: 1.2, // Durasi per gambar
+                ease: "power4.out", // Easing yang halus ala Webflow
+                stagger: 0.3, // Jeda antar gambar (efek domino)
+                scrollTrigger: {
+                    trigger: containerProfileManRef.current,
+                    start: "top 30%", // Animasi mulai saat container 80% terlihat di layar
+                    toggleActions: "play none none reverse",
+                },
+            });
+        }, containerProfileManRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            gsap.from(".reveal-bio > *", {
+                y: 20, // Gerak sedikit dari bawah (20px saja agar subtle)
+                opacity: 0, // Dari transparan
+                duration: 0.8, // Durasi kemunculan
+                stagger: 0.15, // Jeda antar baris (efek domino)
+                ease: "power2.out", // Easing yang smooth
+                scrollTrigger: {
+                    trigger: brideRef.current,
+                    start: "top 80%", // Muncul sedikit lebih awal saat scroll
+                    toggleActions: "play none none reverse",
+                },
+            });
+        }, brideRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            // Animasi untuk list detail (domino effect)
+            gsap.from(".reveal-groom > *", {
+                x: 40, // Muncul dari kanan (40px)
+                opacity: 0,
+                skewX: -10, // Sedikit miring untuk kesan dinamis
+                duration: 1,
+                stagger: 0.15,
+                ease: "power4.out",
+                scrollTrigger: {
+                    trigger: groomRef.current,
+                    start: "top 90%",
+                    toggleActions: "play none none reverse",
+                },
+            });
+        }, groomRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    const eventRef = useRef(null);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: eventRef.current,
+                    start: "top 80%",
+                    toggleActions: "play none none reverse",
+                },
+            });
+
+            // 1. Animasi Header & Garis (Reveal dari kiri)
+            tl.from(".event-title", { x: -30, opacity: 0, duration: 1 })
+                .from(
+                    ".event-line",
+                    { scaleX: 0, transformOrigin: "left center", duration: 1 },
+                    "-=0.7"
+                )
+
+                // 2. Reveal Gambar (Efek Unmasking)
+                .from(
+                    ".event-image",
+                    {
+                        clipPath: "inset(100% 0% 0% 0%)", // Reveal dari bawah ke atas
+                        scale: 1.2,
+                        duration: 1.5,
+                        ease: "power4.out",
+                    },
+                    "-=0.5"
+                )
+
+                // 3. Stagger Detail Acara (Day, Akad, Resepsi)
+                .from(
+                    ".event-detail-item",
+                    {
+                        y: 30,
+                        opacity: 0,
+                        stagger: 0.2,
+                        duration: 0.8,
+                        ease: "power3.out",
+                    },
+                    "-=0.8"
+                )
+
+                // 4. Alamat & Tombol Map
+                .from(
+                    ".event-footer",
+                    {
+                        y: 20,
+                        opacity: 0,
+                        duration: 0.8,
+                    },
+                    "-=0.4"
+                );
+        }, eventRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            ScrollTrigger.refresh();
+        }, 1000);
+
+        return () => {
+            clearTimeout(timer);
+            ScrollTrigger.getAll().forEach((t) => t.kill());
+        };
+    }, []);
 
     const [timeLeft, setTimeLeft] = useState({
         days: "00",
@@ -96,23 +377,22 @@ export default function Open() {
 
     const banks = [
         {
-            name: "Mandiri",
-            account: "Intan Purna Ningrum",
-            number: "1370024804342",
-        },
-        {
-            name: "Mandiri",
-            account: "Deni Priyanto",
-            number: "1370018306528",
+            name: "BCA",
+            account: "Enda Ayu Charissa",
+            number: "8610879285",
         },
     ];
 
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-
-    const handleCopy = (number: string, index: number) => {
-        navigator.clipboard.writeText(number);
-        setCopiedIndex(index);
-        setTimeout(() => setCopiedIndex(null), 1500);
+    const handleCopy = async (number: string, index: number) => {
+        try {
+            await navigator.clipboard.writeText(number.replace(/\s/g, "")); // Copy tanpa spasi
+            setCopiedIndex(index);
+            setTimeout(() => setCopiedIndex(null), 2000); // Reset icon setelah 2 detik
+            console.log("CLICKED");
+        } catch (err) {
+            console.error("Gagal menyalin: ", err);
+        }
     };
 
     const fetchData = async () => {
@@ -125,6 +405,14 @@ export default function Open() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+
+        gsap.to(".wish-card:first-child", {
+            scale: 1.05,
+            duration: 0.3,
+            yoyo: true,
+            repeat: 1,
+            ease: "back.out(1.7)",
+        });
 
         try {
             const res = await fetch("/api/postUcapan", {
@@ -183,7 +471,7 @@ export default function Open() {
             { opacity: 1, x: 0, ease: "power2.in", duration: 1, delay: 0.3 }
         );
 
-        const targetDate = new Date("2025-06-22T10:00:00+07:00").getTime(); // WIB (GMT+7)
+        const targetDate = new Date("2026-04-19T09:00:00+07:00").getTime(); // WIB (GMT+7)
 
         const interval = setInterval(() => {
             const now = new Date().getTime();
@@ -213,870 +501,703 @@ export default function Open() {
             });
         }, 1000);
 
-        return () => clearInterval(interval);
-    }, []);
+        const slideInterval = setInterval(() => {
+            setCurrentSlide((prevIndex) => (prevIndex + 1) % images.length);
+        }, 3000);
+
+        return () => {
+            clearInterval(interval);
+            clearInterval(slideInterval);
+        };
+    }, [images.length]);
     return (
-        <div className="text-white overflow-y-hidden">
+        <div className="text-white overflow-hidden">
             <audio ref={audioRef} src="/sounds.mp3" preload="auto"></audio>
-            <div className="gradient-wrapper overflow-hidden m-w-screen absolute inset-0">
+            <div className="hidden gradient-wrapper overflow-hidden m-w-screen absolute inset-0">
                 <div className="gradient-home-cover-top-left"></div>
                 <div className="gradient-home-cover-right"></div>
                 <div className="gradient-home-cover-middle"></div>
                 <div className="gradient-home-cover-center"></div>
             </div>
-            <div className="fixed bottom-52 right-20 flex flex-col gap-y-20 sm:right-34 lg:right-60 z-60">
-                <button
-                    onClick={handlePrev}
-                    type="button"
-                    className="group/button pointer-events-auto leading-none disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-block aspect-square h-60 w-60 overflow-hidden rounded-16 transition-[transform,opacity] duration-300 ease-easeOutQuint [position:var(--position,relative)] disabled:scale-75 disabled:opacity-25 bg-white text-black max-lg:h-60"
+            <div className="relative w-full h-screen [--round-bg:theme(spacing.24)]">
+                <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-full object-cover"
                 >
-                    <span
-                        className="absolute inset-0 inline-flex items-center justify-center"
-                        style={{ transform: "translateY(100%)" }}
-                    >
-                        <i
-                            className="inline-flex not-italic h-18 rotate-180"
-                            aria-hidden="true"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="18"
-                                height="18"
-                                viewBox="0 0 18 18"
-                                fill="none"
-                                className="h-full w-full"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M8.127 0v14.645l-6.88-6.88L0 9l9 9 9-9-1.248-1.235-6.879 6.88V0H8.127z"
-                                ></path>
-                            </svg>
-                        </i>
-                    </span>
-                    <span
-                        className="absolute inset-0 inline-flex items-center justify-center"
-                        style={{ transform: "none" }}
-                    >
-                        <i
-                            className="inline-flex not-italic h-18 rotate-180"
-                            aria-hidden="true"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="18"
-                                height="18"
-                                viewBox="0 0 18 18"
-                                fill="none"
-                                className="h-full w-full"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M8.127 0v14.645l-6.88-6.88L0 9l9 9 9-9-1.248-1.235-6.879 6.88V0H8.127z"
-                                ></path>
-                            </svg>
-                        </i>
-                    </span>
-                </button>
-                <button
-                    onClick={handleNext}
-                    type="button"
-                    className="group/button pointer-events-auto leading-none disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-block aspect-square h-60 w-60 overflow-hidden rounded-16 transition-[transform,opacity] duration-300 ease-easeOutQuint [position:var(--position,relative)] disabled:scale-75 disabled:opacity-25 bg-white text-black max-lg:h-60"
-                >
-                    <span
-                        className="absolute inset-0 inline-flex items-center justify-center"
-                        style={{ transform: "translateY(-100%)" }}
-                    >
-                        <i
-                            className="inline-flex not-italic h-18"
-                            aria-hidden="true"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="18"
-                                height="18"
-                                viewBox="0 0 18 18"
-                                fill="none"
-                                className="h-full w-full"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M8.127 0v14.645l-6.88-6.88L0 9l9 9 9-9-1.248-1.235-6.879 6.88V0H8.127z"
-                                ></path>
-                            </svg>
-                        </i>
-                    </span>
-                    <span
-                        className="absolute inset-0 inline-flex items-center justify-center"
-                        style={{ transform: "none" }}
-                    >
-                        <i
-                            className="inline-flex not-italic h-18"
-                            aria-hidden="true"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="18"
-                                height="18"
-                                viewBox="0 0 18 18"
-                                fill="none"
-                                className="h-full w-full"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M8.127 0v14.645l-6.88-6.88L0 9l9 9 9-9-1.248-1.235-6.879 6.88V0H8.127z"
-                                ></path>
-                            </svg>
-                        </i>
-                    </span>
-                </button>
-            </div>
-            <div className="relative [--round-bg:theme(spacing.24)]">
-                <div className="w-full overflow-hidden h-100svh">
-                    <div
-                        className="center absolute inset-0 text-white h-100svh"
-                        ref={box1Ref}
-                    >
-                        <div className="block overflow-hidden rounded-12">
-                            <picture
-                                className="absolute inset-0 block h-full w-full"
-                                style={{ opacity: 0 }}
-                                ref={bgRef}
-                            >
-                                <img
-                                    src="/denintan.jpg"
-                                    alt="DENI INTAN"
-                                    className="absolute inset-0 h-full w-full object-cover"
-                                    loading="lazy"
-                                />
-                            </picture>
-                        </div>
-                    </div>
-                    <div className="absolute -left-[calc(var(--round-bg)/2)] -top-[calc(var(--round-bg)/2)] h-[calc(100%+var(--round-bg))] w-[calc(100%+var(--round-bg))]">
-                        <div className="flex flex-col items-center text-center justify-end px-[4vw] pb-120 text-white min-h-100svh md:justify-center md:pb-0 md:max-w-50vw lg:px-[8.4895833333vw]">
-                            <p
-                                className="mb-[40svh] text-12 font-medium uppercase leading-[1.328] sm:mb-[50svh] md:mb-24"
-                                ref={saveRef}
-                                style={{ opacity: 0 }}
-                            >
-                                save the date :
-                            </p>
-                            <div className="pointer-events-auto sm:mb-16">
-                                <h1 className="whitespace-pre-wrap text-balance text-center text-[length:var(--font-size)] font-medium uppercase leading-[1.2] sm:text-[length:var(--sm-font-size)] md:text-[length:var(--md-font-size)]">
-                                    <span
-                                        ref={mingguRef}
-                                        style={{ opacity: 0 }}
-                                    >
-                                        Minggu
-                                    </span>
-                                    <br />
-                                    <span
-                                        ref={tanggalRef}
-                                        style={{ opacity: 0 }}
-                                    >
-                                        22 Juni 2025
-                                    </span>
-                                </h1>
-                            </div>
-                            <div className="hidden">
-                                <h3 className="rounded-30 border border-current px-17 pb-5 pt-7 text-center text-12 uppercase leading-none lg:text-14">
-                                    popular dates
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        className="flex flex-col items-center justify-between pt-107 lg:flex-row lg:pt-0 inset-0 text-white min-h-100dvh md:py-[20vh] mb-screen"
-                        dir="ltr"
-                    ></div>
-                </div>
+                    <source src="/PREWED_VIDEO.MOV" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
                 <div
-                    ref={box2Ref}
-                    id="intro"
-                    className="relative inset-0 h-100svh pointer-events-none w-full pt-107 overflow-hidden text-center"
-                >
-                    <div className="gradient-home-cover-middle z-10"></div>
-                    <div className="px-16 relative z-30">
-                        <div className="transform">
-                            <h2 className="text-16 font-medium uppercase leading-[1.63] max-md:text-center">
-                                Assalamu`alaikum Warahmatullaahi Wabarakaatuh
-                            </h2>
-                        </div>
-                        <p className="text-12 leading-[1.28] max-lg:mb-8 max-md:text-center mt-4">
-                            Maha Suci Allah yang telah menciptakan makhluk-Nya
-                            berpasang-pasangan. Ya Allah semoga ridho-Mu
-                            tercurah mengiringi pernikahan kami:
-                        </p>
-                        <h1 className="font-serif text-40 italic leading-none text-center">
-                            Intan Purna
-                            <br />
-                            Ningrum
-                        </h1>
-                        <p className="text-16 leading-[1.28] max-md:text-center mt-8">
-                            Putri Bapak Subandi dan Ibu Winarni
-                        </p>
-                        <p className="text-12 leading-[1.28] max-lg:mb-8 max-md:text-center mt-2">
-                            Karangasem RT 02, Muntuk Dlingo Bantul
-                        </p>
-                        <h2 className="font-serif text-40 italic leading-none text-center">
-                            &
-                        </h2>
-                        <h1 className="font-serif text-40 italic leading-none text-center mt-16">
-                            Deni Priyanto
-                        </h1>
-                        <p className="text-16 leading-[1.28] max-md:text-center mt-8">
-                            Putra Bapak Pardimin dan Ibu Painten
-                        </p>
-                        <p className="text-12 leading-[1.28] max-lg:mb-8 max-md:text-center mt-1">
-                            Sukorame RT 20, Mangunan Dlingo Bantul
-                        </p>
-                        <div className="flex flex-col justify-end absolute inset-x-0 bottom-0 bg-img z-10">
-                            <div className="w-full max-w-sm mx-auto">
-                                <div className="aspect-[3/4] overflow-hidden rounded-xl shadow-lg rounded-12 top-0">
-                                    <Image
-                                        src="/denintan9.jpg"
-                                        alt="Denintan"
-                                        className="object-cover w-full h-full"
-                                        width={300}
-                                        height={400}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="event">
-                    <div className="relative pointer-events-none w-full px-16">
-                        <TilesGallery />
-                        <div className="gradient-home-cover-middle z-10"></div>
-                        <div className="gradient-home-cover-top-left"></div>
-                        <div
-                            ref={box3Ref}
-                            className="flex flex-col items-center text-center justify-start min-h-100svh pt-107 relative z-30"
-                        >
-                            <h3 className="rounded-30 border border-current px-17 pb-5 pt-7 text-center text-12 uppercase leading-none lg:text-14 mb-34">
-                                Wedding events
-                            </h3>
-                            <h1 className="font-serif text-40 leading-none text-center mb-6">
-                                Akad Nikah
-                            </h1>
-                            <h2 className="text-balance text-22 uppercase leading-[1.2] sm:text-20 lg:text-fluid-lg-design-null-32">
-                                Pukul : 10.00 - Selesai
-                            </h2>
-                            <p className="text-16 font-medium uppercase pt-107 leading-[1.28] max-lg:mb-2 max-md:text-center mt-32">
-                                Kediaman mempelai wanita
-                            </p>
-                            <p className="text-16 leading-[1.28] max-lg:mb-8 max-md:text-center mt-4">
-                                Yang berlokasi di Karangasem RT 02, Muntuk,
-                                Dlingo, Bantul.
-                            </p>
-                            <div className="">
-                                <a
-                                    href="https://maps.app.goo.gl/fLgrYdEDBjTJrPHR6?g_st=iw"
-                                    className="group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-48 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white text-gray-800 w-full"
-                                >
-                                    <span className="relative inline-block aspect-square h-full overflow-hidden rounded-12 bg-gray-300">
-                                        <span
-                                            className="absolute inset-0 inline-flex items-center justify-center"
-                                            style={{
-                                                transform: "translateX(-100%)",
-                                            }}
-                                        >
-                                            <i
-                                                className="inline-flex not-italic h-16"
-                                                aria-hidden="true"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="16"
-                                                    height="11"
-                                                    viewBox="0 0 16 11"
-                                                    fill="none"
-                                                    className="h-full w-full"
-                                                >
-                                                    <path
-                                                        fill="currentColor"
-                                                        d="M8.002 8.168c.818 0 1.513-.286 2.085-.86a2.844 2.844 0 00.858-2.086c0-.819-.287-1.514-.86-2.086a2.844 2.844 0 00-2.087-.857c-.818 0-1.513.286-2.085.86a2.844 2.844 0 00-.858 2.086c0 .819.287 1.514.86 2.085a2.844 2.844 0 002.087.858zM8 7.094a1.8 1.8 0 01-1.325-.545 1.804 1.804 0 01-.546-1.326c0-.52.182-.961.546-1.325A1.804 1.804 0 018 3.352c.52 0 .962.182 1.325.546.364.364.546.806.546 1.325 0 .52-.182.962-.546 1.326A1.804 1.804 0 018 7.094zm.001 3.353c-1.749 0-3.342-.475-4.78-1.425A8.755 8.755 0 010 5.223a8.758 8.758 0 013.22-3.798C4.657.475 6.25 0 8 0s3.342.475 4.78 1.425A8.755 8.755 0 0116 5.223a8.757 8.757 0 01-3.22 3.799c-1.437.95-3.03 1.425-4.779 1.425zM8 9.433c1.455 0 2.8-.376 4.034-1.13a7.564 7.564 0 002.846-3.08 7.564 7.564 0 00-2.846-3.08A7.599 7.599 0 008 1.014c-1.455 0-2.8.377-4.034 1.13a7.564 7.564 0 00-2.846 3.08 7.564 7.564 0 002.845 3.08A7.599 7.599 0 008 9.433z"
-                                                    ></path>
-                                                </svg>
-                                            </i>
-                                        </span>
-                                        <span className="absolute inset-0 inline-flex items-center justify-center">
-                                            <i
-                                                className="inline-flex not-italic h-16"
-                                                aria-hidden="true"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    strokeWidth="1.5"
-                                                    stroke="currentColor"
-                                                    className="h-full w-full"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                                                    />
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                                                    />
-                                                </svg>
-                                            </i>
-                                        </span>
-                                    </span>
-                                    <span className="my-auto grow" dir="ltr">
-                                        lihat map lokasi
-                                    </span>
-                                </a>
-                            </div>
-                        </div>
-                        <div
-                            ref={box4Ref}
-                            className="flex flex-col items-start justify-start min-h-100svh pt-107 relative z-30"
-                        >
-                            <p className="text-16 font-medium uppercase leading-[1.28] max-lg:mb-2 ">
-                                berlanjut dengan acara
-                            </p>
-                            <h1 className="font-serif text-40 leading-none mb-6">
-                                Resepsi
-                            </h1>
-                            <h2 className="text-balance text-22 uppercase leading-[1.2] sm:text-20 lg:text-fluid-lg-design-null-32">
-                                Pukul : 11.30 - 14.00
-                            </h2>
-                            {/* <p className="text-16 leading-[1.28] max-lg:mb-8 max-md:text-center mt-4">
-                                    Kediaman mempelai wanita
-                                </p> */}
-                            <p className="text-16 pt-107 leading-[1.28] max-lg:mb-8 mt-4">
-                                Yang berlokasi di Karangasem RT 02, Muntuk,
-                                Dlingo, Bantul.
-                            </p>
-                            <div className="">
-                                <a
-                                    href="https://maps.app.goo.gl/fLgrYdEDBjTJrPHR6?g_st=iw"
-                                    className="group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-48 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white text-gray-800 w-full"
-                                >
-                                    <span className="relative inline-block aspect-square h-full overflow-hidden rounded-12 bg-gray-300">
-                                        <span
-                                            className="absolute inset-0 inline-flex items-center justify-center"
-                                            style={{
-                                                transform: "translateX(-100%)",
-                                            }}
-                                        >
-                                            <i
-                                                className="inline-flex not-italic h-16"
-                                                aria-hidden="true"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="16"
-                                                    height="11"
-                                                    viewBox="0 0 16 11"
-                                                    fill="none"
-                                                    className="h-full w-full"
-                                                >
-                                                    <path
-                                                        fill="currentColor"
-                                                        d="M8.002 8.168c.818 0 1.513-.286 2.085-.86a2.844 2.844 0 00.858-2.086c0-.819-.287-1.514-.86-2.086a2.844 2.844 0 00-2.087-.857c-.818 0-1.513.286-2.085.86a2.844 2.844 0 00-.858 2.086c0 .819.287 1.514.86 2.085a2.844 2.844 0 002.087.858zM8 7.094a1.8 1.8 0 01-1.325-.545 1.804 1.804 0 01-.546-1.326c0-.52.182-.961.546-1.325A1.804 1.804 0 018 3.352c.52 0 .962.182 1.325.546.364.364.546.806.546 1.325 0 .52-.182.962-.546 1.326A1.804 1.804 0 018 7.094zm.001 3.353c-1.749 0-3.342-.475-4.78-1.425A8.755 8.755 0 010 5.223a8.758 8.758 0 013.22-3.798C4.657.475 6.25 0 8 0s3.342.475 4.78 1.425A8.755 8.755 0 0116 5.223a8.757 8.757 0 01-3.22 3.799c-1.437.95-3.03 1.425-4.779 1.425zM8 9.433c1.455 0 2.8-.376 4.034-1.13a7.564 7.564 0 002.846-3.08 7.564 7.564 0 00-2.846-3.08A7.599 7.599 0 008 1.014c-1.455 0-2.8.377-4.034 1.13a7.564 7.564 0 00-2.846 3.08 7.564 7.564 0 002.845 3.08A7.599 7.599 0 008 9.433z"
-                                                    ></path>
-                                                </svg>
-                                            </i>
-                                        </span>
-                                        <span className="absolute inset-0 inline-flex items-center justify-center">
-                                            <i
-                                                className="inline-flex not-italic h-16"
-                                                aria-hidden="true"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    strokeWidth="1.5"
-                                                    stroke="currentColor"
-                                                    className="h-full w-full"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                                                    />
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                                                    />
-                                                </svg>
-                                            </i>
-                                        </span>
-                                    </span>
-                                    <span className="my-auto grow" dir="ltr">
-                                        lihat map lokasi
-                                    </span>
-                                </a>
-                            </div>
-                        </div>
-                        <div
-                            ref={box5Ref}
-                            className="flex flex-col items-end text-right justify-start pt-107 relative z-30"
-                        >
-                            <h1 className="font-serif text-40 leading-none text-right mb-6">
-                                Ngunduh Mantu
-                            </h1>
-                            <h2 className="text-balance text-22 uppercase leading-[1.2] sm:text-20 lg:text-fluid-lg-design-null-32">
-                                Pukul : 15.00 - 17.00
-                            </h2>
-                            <p className="text-16 font-medium uppercase pt-107 leading-[1.28] max-lg:mb-2 max-md:text-center">
-                                Kediaman mempelai pria
-                            </p>
-                            <p className="text-16 leading-[1.28] max-lg:mb-8 max-md:text-right mt-4">
-                                Yang berlokasi di Sukorame RT 20, Mangunan,
-                                Dlingo, Bantul.
-                            </p>
-                            <div className="">
-                                <a
-                                    href="https://maps.app.goo.gl/WnpDgSurRMYTGS6J7?g_st=com.google.maps.preview.copy"
-                                    className="group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-48 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white text-gray-800 w-full"
-                                >
-                                    <span className="relative inline-block aspect-square h-full overflow-hidden rounded-12 bg-gray-300">
-                                        <span
-                                            className="absolute inset-0 inline-flex items-center justify-center"
-                                            style={{
-                                                transform: "translateX(-100%)",
-                                            }}
-                                        >
-                                            <i
-                                                className="inline-flex not-italic h-16"
-                                                aria-hidden="true"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="16"
-                                                    height="11"
-                                                    viewBox="0 0 16 11"
-                                                    fill="none"
-                                                    className="h-full w-full"
-                                                >
-                                                    <path
-                                                        fill="currentColor"
-                                                        d="M8.002 8.168c.818 0 1.513-.286 2.085-.86a2.844 2.844 0 00.858-2.086c0-.819-.287-1.514-.86-2.086a2.844 2.844 0 00-2.087-.857c-.818 0-1.513.286-2.085.86a2.844 2.844 0 00-.858 2.086c0 .819.287 1.514.86 2.085a2.844 2.844 0 002.087.858zM8 7.094a1.8 1.8 0 01-1.325-.545 1.804 1.804 0 01-.546-1.326c0-.52.182-.961.546-1.325A1.804 1.804 0 018 3.352c.52 0 .962.182 1.325.546.364.364.546.806.546 1.325 0 .52-.182.962-.546 1.326A1.804 1.804 0 018 7.094zm.001 3.353c-1.749 0-3.342-.475-4.78-1.425A8.755 8.755 0 010 5.223a8.758 8.758 0 013.22-3.798C4.657.475 6.25 0 8 0s3.342.475 4.78 1.425A8.755 8.755 0 0116 5.223a8.757 8.757 0 01-3.22 3.799c-1.437.95-3.03 1.425-4.779 1.425zM8 9.433c1.455 0 2.8-.376 4.034-1.13a7.564 7.564 0 002.846-3.08 7.564 7.564 0 00-2.846-3.08A7.599 7.599 0 008 1.014c-1.455 0-2.8.377-4.034 1.13a7.564 7.564 0 00-2.846 3.08 7.564 7.564 0 002.845 3.08A7.599 7.599 0 008 9.433z"
-                                                    ></path>
-                                                </svg>
-                                            </i>
-                                        </span>
-                                        <span className="absolute inset-0 inline-flex items-center justify-center">
-                                            <i
-                                                className="inline-flex not-italic h-16"
-                                                aria-hidden="true"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    strokeWidth="1.5"
-                                                    stroke="currentColor"
-                                                    className="h-full w-full"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                                                    />
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                                                    />
-                                                </svg>
-                                            </i>
-                                        </span>
-                                    </span>
-                                    <span className="my-auto grow" dir="ltr">
-                                        lihat map lokasi
-                                    </span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    ref={box6Ref}
                     id="count-date"
-                    className="relative pointer-events-none w-full px-16 mb-16"
+                    className="absolute top-4 pointer-events-none w-full px-16 mb-16 z-30"
                 >
-                    <div className="flex flex-col mb-12 pt-107 items-center text-center">
-                        <h3 className="rounded-30 border border-current px-17 pb-5 pt-7 text-center text-12 uppercase leading-none lg:text-14">
-                            Count The Date
+                    <div className="flex flex-col mb-12 pt-8 items-center text-center">
+                        <h3 className="rounded-30 border border-current px-17 pb-5 pt-7 text-center text-16 uppercase leading-none lg:text-14">
+                            Menuju Hari Bahagia
                         </h3>
-                        <h1 className="text-balance text-22 uppercase leading-[1.2] sm:text-20 lg:text-fluid-lg-design-null-32 mt-8">
+                        <h1 className="hidden text-balance text-22 uppercase leading-[1.2] sm:text-20 lg:text-fluid-lg-design-null-32 mt-8">
                             MINGGU - 22 JUNI 2025
                         </h1>
                     </div>
                     {/* COUNT DATE */}
                     <div className="flex items-center justify-between">
                         <div className="flex-col itemc-center">
-                            <p className="mb-10 text-center text-10 uppercase leading-none text-white sm:mb-20 sm:text-12 sm:leading-[2]">
+                            <p className="mb-10 text-center text-12 uppercase leading-none text-white sm:mb-20 sm:text-12 sm:leading-[2]">
                                 Day
                             </p>
-                            <p className="text-center text-24 uppercase leading-[1.1] text-white sm:text-40">
+                            <p className="text-center text-4xl uppercase leading-[1.1] text-white sm:text-40">
                                 {timeLeft.days}
                             </p>
                         </div>
                         <div className="flex-col itemc-center">
-                            <p className="mb-10 text-center text-10 uppercase leading-none text-white sm:mb-20 sm:text-12 sm:leading-[2]">
+                            <p className="mb-10 text-center text-12 uppercase leading-none text-white sm:mb-20 sm:text-12 sm:leading-[2]">
                                 Hour
                             </p>
-                            <p className="text-center text-24 uppercase leading-[1.1] text-white sm:text-40">
+                            <p className="text-center text-4xl uppercase leading-[1.1] text-white sm:text-40">
                                 {timeLeft.hours}
                             </p>
                         </div>
                         <div className="flex-col itemc-center">
-                            <p className="mb-10 text-center text-10 uppercase leading-none text-white sm:mb-20 sm:text-12 sm:leading-[2]">
+                            <p className="mb-10 text-center text-12 uppercase leading-none text-white sm:mb-20 sm:text-12 sm:leading-[2]">
                                 Minute
                             </p>
-                            <p className="text-center text-24 uppercase leading-[1.1] text-white sm:text-40">
+                            <p className="text-center text-4xl uppercase leading-[1.1] text-white sm:text-40">
                                 {timeLeft.minutes}
                             </p>
                         </div>
                         <div className="flex-col itemc-center">
-                            <p className="mb-10 text-center text-10 uppercase leading-none text-white sm:mb-20 sm:text-12 sm:leading-[2]">
+                            <p className="mb-10 text-center text-12 uppercase leading-none text-white sm:mb-20 sm:text-12 sm:leading-[2]">
                                 Second
                             </p>
-                            <p className="text-center text-24 uppercase leading-[1.1] text-white sm:text-40">
+                            <p className="text-center text-4xl uppercase leading-[1.1] text-white sm:text-40">
                                 {timeLeft.seconds}
                                 <span className="italic">{`"`}</span>
                             </p>
                         </div>
                     </div>
-                    <div className="flex flex-col items-center pt-107">
-                        <h1 className="font-serif italic text-40 leading-none text-center mb-6">
-                            Wedding gift
-                        </h1>
-                        <p className="text-16 leading-[1.28] max-md:text-center">
-                            Doa Restu Anda merupakan karunia yang sangat berarti
-                            bagi kami. Namun jika memberi adalah ungkapan tanda
-                            kasih Anda, Anda dapat memberi gift
+                </div>
+                <div className="section-title absolute w-full bottom-62 px-4 z-30">
+                    <h2 className="text-12 font-light uppercase leading-[1.328]">
+                        The wedding of
+                    </h2>
+                    <div className="flex">
+                        <div className="title-name">
+                            <h1 className="font-serif text-40 italic leading-none">
+                                Enda & <br />
+                                Mawan
+                            </h1>
+                        </div>
+                        <div className="title-second"></div>
+                    </div>
+                    <div className="flex mt-4 gap-22">
+                        <div className="date">
+                            <h2 className="font-sans text-20 italic">
+                                19.04.2026
+                            </h2>
+                        </div>
+                        <div className="border-t-2 w-full"></div>
+                    </div>
+                </div>
+                <div className="absolute inset-0 z-10">
+                    {/* Gradient Hitam untuk pembacaan teks (Vignette) */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
+
+                    {/* Efek Grain/Noise */}
+                    <div className="bg-grain absolute inset-0 w-full h-full opacity-40"></div>
+                </div>
+            </div>
+            <div ref={introSectionRef} className="px-4">
+                <div className="flex flex-col items-center pt-12">
+                    <h1 className="caslon-font italic text-3xl text-center mb-6">
+                        Assalamu`alaikum Warahmatullaahi Wabarakaatuh
+                    </h1>
+                    <p className="text-16 leading-[1.28] max-md:text-center intro-paragraph">
+                        Maha Suci Allah yang telah menciptakan makhluk-Nya
+                        berpasang-pasangan. Ya Allah semoga ridho-Mu tercurah
+                        mengiringi pernikahan kami:
+                    </p>
+                </div>
+            </div>
+            <div ref={containerProfileWomanRef} className="px-4 mt-22">
+                <div className="flex items-start justify-between">
+                    <div className="images-wrapper w-[150px] h-[200px] flex-none">
+                        <div className="image-item relative w-full h-full max-w-full before:bg-[url('/ENDA_1.avif')]"></div>
+                    </div>
+                    <div className="images-wrapper w-[150px] h-[150px] flex-none">
+                        <div className="image-item relative w-full h-full max-w-full before:bg-[url('/ENDA_3.avif')]"></div>
+                    </div>
+                </div>
+                <div className="flex mt-4">
+                    <div className="images-wrapper w-[280px] h-[420px] flex-none">
+                        <div className="image-item relative w-full h-full max-w-full before:bg-[url('/ENDA_2.avif')]"></div>
+                    </div>
+                </div>
+            </div>
+            <div
+                ref={brideRef}
+                className="reveal-bio px-6 mt-12 border-l border-white/10 ml-4 relative"
+            >
+                <div className="gradient-home-cover-middle"></div>
+
+                {/* Sub-judul kecil di atas nama */}
+                <span className="text-[10px] uppercase tracking-[0.4em] text-white/40 block mb-2">
+                    The Bride
+                </span>
+
+                {/* Nama Utama */}
+                <h1 className="caslon-font text-4xl leading-[0.9] text-white mb-6">
+                    Enda Ayu <br />
+                    <span className="italic">Charissa</span>
+                    <span className="block text-sm mt-2 font-sans not-italic opacity-60 tracking-normal">
+                        S.M., M.B.A
+                    </span>
+                </h1>
+
+                {/* Info Orang Tua dengan gaya list */}
+                <div className="mt-8 space-y-4">
+                    <div>
+                        <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1 font-bold">
+                            Putri Dari
+                        </p>
+                        <p className="text-sm font-light text-white/90 leading-relaxed">
+                            Bpk. R. Bambang Hantaka S (alm) <br /> & Ibu Dewa
+                            Ayu Ketut E
                         </p>
                     </div>
-                    <div className="flex flex-col mb-12 pt-12 items-center text-center">
-                        <div className="">
-                            <button className="group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-48 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white/10 text-white backdrop-blur-[8px] w-full">
-                                <span className="relative inline-block aspect-square h-full overflow-hidden rounded-12 bg-white/10">
-                                    <span
-                                        className="absolute inset-0 inline-flex items-center justify-center"
-                                        style={{
-                                            transform: "translateX(-100%)",
-                                        }}
-                                    >
-                                        <i
-                                            className="inline-flex not-italic h-16"
-                                            aria-hidden="true"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                className="h-full w-full"
-                                                strokeWidth="1.5"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-                                                />
-                                            </svg>
-                                        </i>
-                                    </span>
-                                    <span className="absolute inset-0 inline-flex items-center justify-center">
-                                        <i
-                                            className="inline-flex not-italic h-16"
-                                            aria-hidden="true"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                className="h-full w-full"
-                                                strokeWidth="1.5"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-                                                />
-                                            </svg>
-                                        </i>
-                                    </span>
-                                </span>
-                                <span className="my-auto grow" dir="ltr">
-                                    kirim wedding gift
-                                </span>
-                            </button>
+
+                    <div>
+                        <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1 font-bold">
+                            Alamat
+                        </p>
+                        <p className="text-sm font-light text-white/70">
+                            Krapyak, RT 02/54 Wedomartani, Sleman, Yogyakarta
+                        </p>
+                    </div>
+                </div>
+
+                <div className="mt-10">
+                    <a
+                        href="https://www.instagram.com/endacharissa?igsh=MWVpeXRwdjl0bjI2bA=="
+                        target="_blank"
+                        className="inline-flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] border-b border-white/20 pb-2 hover:border-white transition-all"
+                    >
+                        <Instagram size={14} />
+                        Instagram
+                    </a>
+                </div>
+            </div>
+            <div ref={containerProfileManRef} className="px-4 mt-22">
+                <div className="flex justify-end mt-4">
+                    <div className="images-wrapper w-[280px] h-[420px] flex-none">
+                        <div className="image-item relative w-full h-full max-w-full before:bg-[url('/MAWAN_1.avif')]"></div>
+                    </div>
+                </div>
+                <div className="flex mt-4">
+                    <div className="images-wrapper w-[300px] h-[150px] flex-none">
+                        <div className="image-item relative w-full h-full max-w-full before:bg-[url('/MAWAN_2.avif')]"></div>
+                    </div>
+                </div>
+                <div className="flex mt-4">
+                    <div className="images-wrapper w-[150px] h-[150px] flex-none">
+                        <div className="image-item relative w-full h-full max-w-full before:bg-[url('/MAWAN_3.avif')]"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                ref={groomRef}
+                className="reveal-groom px-6 mt-12 border-r border-white/10 mr-4 text-right relative"
+            >
+                {/* <div className="gradient-home-cover-right"></div> */}
+                <div className="gradient-home-cover-center"></div>
+
+                {/* Sub-judul kecil */}
+                <div className="">
+                    <span className="groom-sub text-[10px] uppercase tracking-[0.4em] text-white/40 block mb-2">
+                        The Groom
+                    </span>
+                </div>
+
+                {/* Nama Utama */}
+                <h1 className="caslon-font text-4xl leading-[0.9] text-white mb-6">
+                    <div className="">
+                        <span className="groom-name block">Darmawan</span>
+                    </div>
+                    <div className="">
+                        <span className="groom-name italic block">
+                            Triansyah
+                        </span>
+                    </div>
+                    <div className="">
+                        <span className="groom-title block text-sm mt-2 font-sans not-italic opacity-60 tracking-normal">
+                            S.M.
+                        </span>
+                    </div>
+                </h1>
+
+                {/* Info Orang Tua & Origin */}
+                <div className="mt-8 space-y-4">
+                    <div className="groom-info">
+                        <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1 font-bold">
+                            Putra Dari
+                        </p>
+                        <p className="text-sm font-light text-white/90 leading-relaxed">
+                            Bapak Darmanto <br /> & Ibu Sulastri
+                        </p>
+                    </div>
+
+                    <div className="groom-info">
+                        <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1 font-bold">
+                            Alamat
+                        </p>
+                        <p className="text-sm font-light text-white/70">
+                            Jabung RT 001 Plupuh, Sragen, Jawa Tengah
+                        </p>
+                    </div>
+                </div>
+
+                {/* Instagram Button */}
+                <div className="mt-10 overflow-hidden">
+                    <a
+                        href="https://www.instagram.com/darmawantriansyah?igsh=MTFrc3NpbGxzMHRtbQ=="
+                        target="_blank"
+                        className="groom-link inline-flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] border-b border-white/20 pb-2 hover:border-white transition-all"
+                    >
+                        <Instagram size={14} />
+                        Instagram
+                    </a>
+                </div>
+            </div>
+
+            <div ref={eventRef} id="event" className="px-4 mt-32">
+                {/* Header */}
+                <div className="flex mt-4 items-center gap-4">
+                    <div className="date event-title">
+                        <h1 className="font-serif text-40 leading-none text-white whitespace-nowrap">
+                            Wedding Events
+                        </h1>
+                    </div>
+                    <div className="event-line border-b-2 w-full border-white/30"></div>
+                </div>
+
+                <div className="my-22 bg-white text-black pb-12 overflow-hidden rounded-sm shadow-xl">
+                    {/* Image Section */}
+                    <div className="flex">
+                        <div className="event-image images-wrapper w-full h-[220px] flex-none overflow-hidden">
+                            <div className="image-item relative w-full h-full bg-cover bg-center bg-[url('/ENDA_MARWAN_1.jpg')]"></div>
                         </div>
                     </div>
-                    <div className="px-16 space-y-8">
-                        {banks.map((bank, index) => (
-                            <div className="px-8" key={index}>
-                                <button className="card-mandiri group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-64 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white/10 text-white backdrop-blur-[8px] w-full">
-                                    <span className="relative inline-block aspect-square h-full overflow-hidden rounded-12 bg-white/10">
-                                        <div className="absolute inset-0 pt-4">
-                                            <img
-                                                src="/mandiri-fix.webp"
-                                                className="w-auto h-auto"
-                                                alt=""
-                                            />
-                                        </div>
-                                    </span>
-                                    <span
-                                        className="my-auto grow text-16"
-                                        dir="ltr"
+
+                    <div className="flex justify-between border-b-1 border-neutral-200">
+                        <div className="w-14 border-r-1 border-neutral-200 relative min-h-[20px]">
+                            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-90">
+                                <span className="whitespace-nowrap uppercase tracking-widest text-lg font-calson text-neutral-400">
+                                    Our Wedding
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Details */}
+                        <div className="flex flex-col gap-[28px] flex-1 px-4 my-12">
+                            {["Day", "Akad Nikah", "Resepsi"].map(
+                                (label, index) => (
+                                    <div
+                                        key={index}
+                                        className="event-detail-item flex flex-col gap-2 flex-wrap items-center justify-between"
                                     >
-                                        {bank.name} - {bank.account}
-                                        <br />
-                                        <input
-                                            type="text"
-                                            value={bank.number}
-                                            readOnly
-                                            className="text-lg text-center font-mono bg-transparent outline-none w-[150px] cursor-default"
-                                            onClick={() =>
-                                                handleCopy(bank.number, index)
-                                            }
+                                        <div className="self-start caslon-font text-xl text-neutral-600 italic">
+                                            <p>{label}</p>
+                                        </div>
+                                        <p className="self-end caslon-font text-3xl italic">
+                                            {label === "Day"
+                                                ? "Minggu 19.04.2026"
+                                                : label === "Akad Nikah"
+                                                ? "09.00"
+                                                : "12.00 - 14.00"}
+                                        </p>
+                                    </div>
+                                )
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Footer Content */}
+                    <div className="event-footer">
+                        <p className="text-14 leading-[1.28] mt-6 text-center px-6 text-neutral-600">
+                            Lokasi : Gedung Serbaguna Sinduharjo, Jl. Kaliurang
+                            Km. 10,5 No. 22, Ngaglik, Dentan, Sinduharjo,
+                            Sleman, Yogyakarta
+                        </p>
+                        <div className="mt-8 max-w-[250px] m-auto px-4 event-footer">
+                            <a
+                                href="https://www.google.com/maps/dir//Gedung+Serba+Guna+Sinduharjo,+Jl.+Kaliurang+Km.+10,5+No.+22,+Ngaglik,+Dentan,+Sinduharjo,+Kec.+Sleman,+Kabupaten+Sleman,+Daerah+Istimewa+Yogyakarta+55581/@-7.8730469,110.4242874,9z/data=!4m8!4m7!1m0!1m5!1m1!1s0x2e7a5949bb2e9473:0x2efe02d8f2cb2cd8!2m2!1d110.4050157!2d-7.7181611?entry=ttu&g_ep=EgoyMDI2MDIwNC4wIKXMDSoASAFQAw%3D%3D" // Masukkan link aslinya di sini
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group relative flex h-14 items-center justify-between overflow-hidden rounded-full bg-black px-2 py-2 transition-all duration-500 hover:bg-neutral-800"
+                            >
+                                {/* Lingkaran Ikon yang Beranimasi */}
+                                <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white text-black transition-transform duration-500 group-hover:rotate-[360deg]">
+                                    {/* Ikon 1 (Default) */}
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth="1.5"
+                                        stroke="currentColor"
+                                        className="absolute h-5 w-5 transition-all duration-500 group-hover:translate-y-[-150%]"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                                         />
-                                        <i>
-                                            {copiedIndex === index
-                                                ? "✔ Disalin"
-                                                : "📋 Salin"}
-                                        </i>
-                                    </span>
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+                                        />
+                                    </svg>
+
+                                    {/* Ikon 2 (Muncul saat Hover dari Bawah) */}
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 16 16"
+                                        className="absolute h-5 w-5 translate-y-[150%] transition-all duration-500 group-hover:translate-y-0"
+                                    >
+                                        <path d="M15.817.113a.303.303 0 0 0-.301-.064L.444 5.523a.303.303 0 0 0-.01.559l7.101 3.254 3.254 7.101a.303.303 0 0 0 .559-.01L15.881.485a.303.303 0 0 0-.064-.372z" />
+                                    </svg>
+                                </div>
+
+                                {/* Teks Tombol */}
+                                <span className="flex-1 pr-4 text-center text-11 font-bold uppercase tracking-widest text-white">
+                                    Lihat Map Lokasi
+                                </span>
+
+                                {/* Efek Cahaya (Glow) saat Hover */}
+                                <div className="absolute inset-0 translate-y-full bg-gradient-to-t from-white/10 to-transparent transition-transform duration-500 group-hover:translate-y-0"></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section id="gallery" className="bg-black text-white">
+                {/* Wrapper Pin */}
+                <div
+                    ref={triggerRef}
+                    className="h-screen flex flex-col overflow-hidden"
+                >
+                    {/* Title: Di atas pada mobile, menyesuaikan pada desktop */}
+                    <div className="pt-12 pb-6 px-6 md:px-20">
+                        <h2 className="font-serif text-4xl md:text-6xl italic leading-tight">
+                            Our Moments
+                        </h2>
+                        <div className="flex items-center gap-4 mt-2">
+                            <div className="h-[1px] w-12 bg-white/50"></div>
+                            <p className="uppercase tracking-[0.2em] text-[10px] text-white/40">
+                                Swipe or scroll to explore
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Horizontal Container */}
+                    <div
+                        ref={sectionRef}
+                        className="flex flex-1 items-center gap-6 px-6 md:px-20 h-full w-fit"
+                    >
+                        {galleryImages.map((img, index) => (
+                            <div
+                                key={index}
+                                className="relative flex-none w-[75vw] md:w-[400px] h-[50vh] md:h-[550px] overflow-hidden rounded-sm group"
+                            >
+                                <div
+                                    className="h-full w-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                                    style={{
+                                        backgroundImage: `url(${img.src})`,
+                                    }}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+                                    <div className="overflow-hidden">
+                                        <span className="block text-white caslon-font text-xl italic translate-y-0 transition-transform duration-500 hidden">
+                                            {img.title}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+
+                        {/* Spacer Akhir agar gambar terakhir tidak mepet */}
+                        <div className="flex-none w-[5vw]" />
+                    </div>
+                </div>
+            </section>
+
+            <section ref={giftRef} id="wedding-gift" className="relative">
+                <div className="gradient-home-cover-middle"></div>
+                {/* Header Section */}
+                <div className="gift-header flex flex-col items-center pt-40 px-6">
+                    <h1 className="font-serif italic text-40 leading-none text-center mb-6">
+                        Wedding Gift
+                    </h1>
+                    <p className="text-16 leading-[1.28] text-center max-w-md opacity-80">
+                        Doa Restu Anda merupakan karunia yang sangat berarti
+                        bagi kami. Namun jika memberi adalah ungkapan tanda
+                        kasih Anda, Anda dapat memberi hadiah.
+                    </p>
+
+                    {/* Button Container */}
+                    <div className="mt-10 w-full max-w-[280px]">
+                        <button className="group/button relative w-full h-14 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center px-2 transition-all hover:bg-white/10">
+                            <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center text-black overflow-hidden relative">
+                                {/* Icon Slide Effect sama seperti tombol Map */}
+                                <div className="group-hover/button:-translate-y-10 transition-transform duration-500">
+                                    <Gift size={20} />
+                                </div>
+                                <div className="absolute translate-y-10 group-hover/button:translate-y-0 transition-transform duration-500">
+                                    <Heart size={20} className="text-red-500" />
+                                </div>
+                            </div>
+                            <span className="flex-1 text-center text-11 uppercase tracking-[0.2em] font-bold">
+                                Kirim Wedding Gift
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Bank Cards Section */}
+                <div className="bank-card-container space-y-8 px-4 py-16 flex flex-col items-center perspective-1000">
+                    {banks.map((bank, index) => (
+                        <div
+                            className="bank-card w-full max-w-[350px] min-h-[210px] rounded-3xl p-7 text-white shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-gradient-to-br from-slate-900 via-gray-900 to-black relative overflow-hidden group border border-white/5"
+                            key={index}
+                        >
+                            {/* Efek Kilatan (Reflective Light) */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+
+                            <div className="flex justify-between items-start relative z-10">
+                                <div className="space-y-3">
+                                    <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-white/40">
+                                        Debit Card
+                                    </p>
+                                    <div className="w-11 h-8 bg-gradient-to-br from-amber-200 via-yellow-500 to-amber-700 rounded-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.5)]"></div>
+                                </div>
+                                <h1 className="italic font-bold text-2xl tracking-tight opacity-90">
+                                    {bank.name}
+                                </h1>
+                            </div>
+
+                            {/* Nomor Kartu */}
+                            <div className="mt-10 flex items-center gap-4 relative z-10">
+                                <p className="text-xl md:text-2xl tracking-[0.18em] font-mono font-medium drop-shadow-lg">
+                                    {bank.number}
+                                </p>
+                                <button
+                                    onClick={() =>
+                                        handleCopy(bank.number, index)
+                                    }
+                                    className="p-2 rounded-xl bg-white/5 hover:bg-white/10 active:scale-90 transition-all border border-white/10"
+                                >
+                                    {copiedIndex === index ? (
+                                        <Check
+                                            size={16}
+                                            className="text-green-400"
+                                        />
+                                    ) : (
+                                        <Copy
+                                            size={16}
+                                            className="text-white/50"
+                                        />
+                                    )}
                                 </button>
+                            </div>
+
+                            {/* Card Holder & Logo */}
+                            <div className="mt-8 flex justify-between items-end relative z-10">
+                                <div>
+                                    <p className="text-[9px] uppercase tracking-widest text-white/30 mb-1">
+                                        Card Holder
+                                    </p>
+                                    <p className="text-sm tracking-[0.1em] font-medium uppercase italic">
+                                        {bank.account}
+                                    </p>
+                                </div>
+
+                                <div className="flex -space-x-4 opacity-80 group-hover:opacity-100 transition-opacity">
+                                    <div className="w-10 h-10 rounded-full bg-orange-500/80 blur-[1px]"></div>
+                                    <div className="w-10 h-10 rounded-full bg-red-600/80 blur-[1px]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <section
+                ref={wishSectionRef}
+                className="relative min-h-screen w-full px-6 mt-22 pb-12 flex flex-col items-center pointer-events-auto mb-8"
+                id="ucapan"
+            >
+                {/* Judul Section */}
+                <div className="wish-header text-center mb-8">
+                    <h1 className="font-serif text-4xl leading-tight text-white drop-shadow-md">
+                        Ucapan & Doa
+                    </h1>
+                    <p className="text-white/60 text-16 mt-2 font-light italic">
+                        Berikan doa restu untuk kedua mempelai
+                    </p>
+                </div>
+
+                {/* Container Form */}
+                <div className="wish-form w-full max-w-md bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-xl">
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <div>
+                            <label className="text-xs font-semibold uppercase tracking-widest text-white/70 ml-1">
+                                Nama Anda
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Contoh: Jhon Doe"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                                className="mt-1.5 w-full block bg-white/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all text-sm"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="text-xs font-semibold uppercase tracking-widest text-white/70 ml-1">
+                                Pesan & Doa
+                            </label>
+                            <textarea
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                required
+                                rows={4}
+                                className="mt-1.5 w-full block bg-white/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all text-sm resize-none"
+                                placeholder="Tuliskan harapan terbaikmu..."
+                            ></textarea>
+                        </div>
+
+                        {status && (
+                            <p className="text-center text-xs text-white/80 italic animate-pulse">
+                                {status}
+                            </p>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="group/button relative flex h-14 w-full items-center justify-between overflow-hidden rounded-full bg-white px-2 py-2 transition-all duration-500 hover:bg-neutral-200 disabled:opacity-50"
+                        >
+                            {/* Lingkaran Ikon (Sama dengan button Map) */}
+                            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-black text-white transition-transform duration-500 group-hover/button:rotate-[360deg]">
+                                {loading ? (
+                                    <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+                                ) : (
+                                    <>
+                                        {/* Ikon 1: Pesawat Kertas (Default) */}
+                                        <Send
+                                            size={18}
+                                            className="absolute transition-all duration-500 group-hover/button:translate-y-[-150%] group-hover/button:translate-x-[150%]"
+                                        />
+                                        {/* Ikon 2: Hati (Muncul saat Hover) */}
+                                        <Heart
+                                            size={18}
+                                            className="absolute translate-y-[150%] transition-all duration-500 group-hover/button:translate-y-0 text-red-500 fill-red-500"
+                                        />
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Teks Tombol (Centered) */}
+                            <span className="flex-1 pr-4 text-center text-11 font-bold uppercase tracking-[0.2em] text-black">
+                                {loading ? "Mengirim..." : "Kirim Ucapan"}
+                            </span>
+
+                            {/* Efek Overlay Halus */}
+                            <div className="absolute inset-0 translate-y-full bg-gradient-to-t from-black/5 to-transparent transition-transform duration-500 group-hover/button:translate-y-0"></div>
+                        </button>
+                    </form>
+                </div>
+
+                {/* Container List Ucapan (Timeline Style) */}
+                <div className="wish-list-container mt-10 w-full max-w-md">
+                    <h3 className="text-white/80 text-sm font-medium mb-4 px-2">
+                        {data.length} Pesan Tersimpan
+                    </h3>
+                    <div className="max-h-[400px] overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+                        {[...data].reverse().map((item, idx) => (
+                            <div
+                                key={idx}
+                                className="wish-card bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-xl transition-all hover:bg-white/10"
+                            >
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-gray-400 to-gray-200 flex items-center justify-center text-gray-800 font-bold text-xs">
+                                        {item.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span className="text-sm font-bold text-white tracking-wide">
+                                        {item.name}
+                                    </span>
+                                </div>
+                                <p className="text-white/70 text-sm leading-relaxed italic font-light">
+                                    {`"${item.message}"`}
+                                </p>
                             </div>
                         ))}
                     </div>
                 </div>
+            </section>
+
+            {/* PARALAX */}
+            <div
+                ref={containerRef}
+                className="relative h-[90vh] w-full overflow-hidden"
+            >
                 <div
-                    className="relative min-h-100svh pointer-events-none w-full px-16"
-                    id="ucapan"
-                    ref={box7Ref}
+                    ref={bgSlideRef}
+                    className="absolute inset-0 w-full h-[120%] -top-[10%]"
                 >
-                    <div className="pt-107">
-                        <h1 className="font-serif text-40 leading-none text-center mb-6">
-                            Ucapan & Doa
-                        </h1>
-                    </div>
-                    <div className="mt-8 px-16 w-full">
-                        <form onSubmit={handleSubmit}>
-                            <div className="">
-                                <label className="sm:text-12 text-11 font-medium uppercase leading-[1.328]">
-                                    ucapan dan doa
-                                </label>
-                                <textarea
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    required
-                                    className="mt-2 w-full group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-22 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white/10 text-white backdrop-blur-[8px] sm:w-full"
-                                    placeholder="Kirim ucapan dan doa..."
-                                ></textarea>
-                            </div>
-                            <div className="">
-                                <label className="sm:text-12 text-11 font-medium uppercase leading-[1.328]">
-                                    nama
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="Nama"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    required
-                                    className="mt-2 w-full group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-48 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white/10 text-white backdrop-blur-[8px] sm:w-full"
-                                />
-                            </div>
-                            <p className="text-center text-sm text-gray-600">
-                                {status}
-                            </p>
-                            <div className="flex flex-col mb-12 pt-12 items-center text-center">
-                                <div className="">
-                                    <button
-                                        type="submit"
-                                        className="group/button pointer-events-auto disabled:cursor-not-allowed forced-colors:border forced-colors:border-black forced-colors:disabled:text-[GrayText] outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2 inline-flex h-48 items-stretch gap-x-16 rounded-16 py-4 pl-4 pr-20 text-center text-11 font-medium uppercase leading-[1.328] [position:var(--position,static)] sm:h-56 sm:text-12 bg-white/10 text-white backdrop-blur-[8px] w-full"
-                                    >
-                                        <span className="relative inline-block aspect-square h-full overflow-hidden rounded-12 bg-white/10">
-                                            <span
-                                                className="absolute inset-0 inline-flex items-center justify-center"
-                                                style={{
-                                                    transform:
-                                                        "translateX(-100%)",
-                                                }}
-                                            >
-                                                <i
-                                                    className="inline-flex not-italic h-16"
-                                                    aria-hidden="true"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="24"
-                                                        height="24"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        className="h-full w-full"
-                                                        strokeWidth="1.5"
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                                                        />
-                                                    </svg>
-                                                </i>
-                                            </span>
-                                            <span className="absolute inset-0 inline-flex items-center justify-center">
-                                                <i
-                                                    className="inline-flex not-italic h-16"
-                                                    aria-hidden="true"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="24"
-                                                        height="24"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        className="h-full w-full"
-                                                        strokeWidth="1.5"
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                                                        />
-                                                    </svg>
-                                                </i>
-                                            </span>
-                                        </span>
-                                        <span
-                                            className="my-auto grow"
-                                            dir="ltr"
-                                        >
-                                            {loading
-                                                ? "Mengirim..."
-                                                : "Kirim Ucapan"}
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div className="mb-8 px-16 min-h-100svh overflow-scroll rounded-16 bg-white/10 text-white backdrop-blur-[8px] p-2">
-                        <div className="flex flex-col items-center gap-2">
-                            {data.map((item, idx) => (
-                                <div className="overflow-scroll" key={idx}>
-                                    <button
-                                        className="group/button pointer-events-auto disabled:cursor-not-allowed 
-    outline outline-0 outline-offset-2 outline-[var(--outline-color)] 
-    focus-visible:outline-2 inline-flex items-start gap-x-4 
-    rounded-16 py-4 pl-4 pr-6 text-left text-11 font-medium uppercase 
-    leading-[1.328] bg-white text-gray-800 w-full h-auto"
-                                    >
-                                        <span className="relative inline-block aspect-square w-12 min-w-12 overflow-hidden rounded-12 bg-gray-300">
-                                            <span className="absolute inset-0 inline-flex items-center justify-center">
-                                                <i
-                                                    className="inline-flex not-italic h-16"
-                                                    aria-hidden="true"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="24"
-                                                        height="24"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        className="h-full w-full"
-                                                        strokeWidth="1.5"
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                                                        />
-                                                    </svg>
-                                                </i>
-                                            </span>
-                                        </span>
-                                        <span
-                                            className="my-auto grow text-left"
-                                            dir="ltr"
-                                        >
-                                            {item.name}
-                                            <br />
-                                            <i>{item.message}</i>
-                                        </span>
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                <div className="pt-107" ref={box8Ref}>
-                    <p className="text-16 text-center leading-[1.28] max-md:text-center px-16">
-                        Terima kasih atas doa, cinta, dan dukungan yang telah
-                        anda berikan. Kehadiran dan restu dari anda adalah
-                        kebahagiaan bagi kami.
-                    </p>
-                    <h2 className="text-balance text-22 leading-[1.2] sm:text-20 lg:text-fluid-lg-design-null-32  text-center mt-8">
-                        Salam Hangat,
-                    </h2>
-                    <h1 className="font-serif text-40 italic leading-none text-center mb-24">
-                        Intan & Deni
-                    </h1>
-                </div>
-            </div>
-            <div className="hidden fixed inset-x-0 bottom-30 z-10 flex items-center max-sm:justify-center">
-                <div className="hidden flex-1 sm:block"></div>
-                <div className="">
-                    <div className="flex gap-x-2 rounded-18 bg-white p-4 sm:gap-x-10 sm:rounded-20 pointer-events-auto">
-                        <a
-                            href="#"
-                            className="relative inline-flex h-48 items-center rounded-14 px-12 text-center text-11 font-medium uppercase sm:h-64 sm:rounded-18 sm:px-20 pointer-events-none outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2"
+                    {images.map((src, index) => (
+                        <div
+                            key={src}
+                            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-[cubic-bezier(0.4,0.4,0,1)] ${
+                                index === currentSlide
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                            }`}
                         >
                             <div
-                                className="absolute inset-0 bg-gray-300"
-                                style={{
-                                    borderRadius: "14px",
-                                    transform: "none",
-                                    transformOrigin: "50% 50% 0px",
-                                    opacity: 1,
-                                }}
-                            ></div>
-                            <span className="relative z-10">intro</span>
-                        </a>
-                        <a
-                            href="#"
-                            className="relative inline-flex h-48 items-center rounded-14 px-12 text-center text-11 font-medium uppercase sm:h-64 sm:rounded-18 sm:px-20 pointer-events-none outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2"
-                        >
-                            <span className="relative z-10">description</span>
-                        </a>
-                        <a
-                            href="#"
-                            className="relative inline-flex h-48 items-center rounded-14 px-12 text-center text-11 font-medium uppercase sm:h-64 sm:rounded-18 sm:px-20 pointer-events-none outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2"
-                        >
-                            <span className="relative z-10">finishes</span>
-                        </a>
-                        <a
-                            href="#"
-                            className="relative inline-flex h-48 items-center rounded-14 px-12 text-center text-11 font-medium uppercase sm:h-64 sm:rounded-18 sm:px-20 pointer-events-none outline outline-0 outline-offset-2 outline-[var(--outline-color)] forced-colors:outline-[Highlight] [--outline-color:theme(colors.outline)] focus-visible:outline-2"
-                        >
-                            <span className="relative z-10">look</span>
-                        </a>
+                                className={`w-full h-full bg-cover bg-center transition-transform duration-[5000ms] ease-[cubic-bezier(0.4,0.4,0,1)] ${
+                                    index === currentSlide
+                                        ? "scale-108"
+                                        : "scale-100"
+                                }`}
+                                style={{ backgroundImage: `url(${src})` }}
+                            />
+                        </div>
+                    ))}
+                    <div className="relative z-10 flex flex-col h-full items-center justify-center">
+                        <p className="text-16 text-center leading-[1.28] max-md:text-center px-16">
+                            Terima kasih atas doa, cinta, dan dukungan yang
+                            telah anda berikan. Kehadiran dan restu dari anda
+                            adalah kebahagiaan bagi kami.
+                        </p>
+                        <h2 className="text-balance text-22 leading-[1.2] sm:text-20 lg:text-fluid-lg-design-null-32  text-center mt-8">
+                            Salam
+                        </h2>
+                        <h1 className="caslon-font text-40 italic leading-none text-center mb-24">
+                            Enda & Mawan
+                        </h1>
                     </div>
                 </div>
             </div>
+
+            <FloatingNav />
+            <Footer />
         </div>
     );
 }
