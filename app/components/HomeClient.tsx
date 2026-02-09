@@ -137,8 +137,8 @@ export default function HomeClient() {
     return (
         <div className="max-h-dvh overflow-hidden">
             <main ref={opacityRef} style={{ opacity: 0 }}>
-                <div className="space-y-custom flex-col px-4 text-center text-white center min-h-100svh [--mt:theme(spacing.20)] sm:[--mt:theme(spacing.40)]">
-                    <h1 className="text-balance text-center text-78 font-medium uppercase leading-none sm:h-[1cap] sm:text-90 lg:text-fluid-lg-design-null-118">
+                <div className="space-y-2 flex flex-col items-center px-6 text-center text-white min-h-svh justify-center">
+                    <h1 className="text-balance font-medium uppercase leading-[0.85] tracking-tighter text-[clamp(3.5rem,15vw,8rem)]">
                         {textTitle.split("").map((char, i) => (
                             <span
                                 key={i}
@@ -151,7 +151,7 @@ export default function HomeClient() {
                             </span>
                         ))}
                     </h1>
-                    <h2 className="font-serif text-40 italic leading-none [--mt:theme(spacing.0)] sm:text-42 sm:[--mt:theme(spacing.20)] lg:text-fluid-lg-design-null-50 mt-0">
+                    <h2 className="font-serif italic text-[clamp(1.8rem,6vw,3.2rem)] leading-none text-white/90">
                         {invTitle.split("").map((char, i) => (
                             <span
                                 key={i}
@@ -164,15 +164,19 @@ export default function HomeClient() {
                             </span>
                         ))}
                     </h2>
-                    <p className="text-balance text-12 font-medium uppercase leading-[2] tracking-[0.25em] max-md:[--mt:theme(spacing.60)] max-sm:[--mt:theme(spacing.34)]">
-                        <span ref={textRef}>
-                            Untuk Teman, Sahabat dan Saudaraku.
+                    <p className="ext-balance font-medium uppercase tracking-[0.2em] leading-relaxed opacity-80 mx-auto max-w-[90%] text-[12px] sm:text-[14px] lg:text-[14px] mt-6 sm:mt-8">
+                        <span
+                            ref={textRef}
+                            className="block border-b border-white/10 pb-2 mb-2"
+                        >
+                            Special Invitation
                         </span>
-                        <br />
-                        <span ref={textRef2}>
-                            Dengan penuh rasa syukur dan bahagia, kami
-                            mengundang kehadiranmu untuk menjadi bagian dari
-                            hari istimewa kami.
+                        <span
+                            ref={textRef2}
+                            className="normal-case italic font-light tracking-wide text-white/80"
+                        >
+                            {` "Kami mengundang kehadiranmu untuk menjadi bagian
+                            dari hari istimewa kami."`}
                         </span>
                     </p>
 
@@ -183,7 +187,7 @@ export default function HomeClient() {
                         {/* Slot Nama Tamu (The Recipient) */}
                         <div className="w-full text-center space-y-4 recipient-card">
                             <span className="text-[10px] uppercase tracking-[0.4em] text-white/40 block">
-                                Dear, Special Guest
+                                Dear, Our Guest
                             </span>
 
                             {/* Nama Tamu dengan Style Glass Card */}

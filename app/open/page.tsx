@@ -650,7 +650,7 @@ export default function Open() {
                 {/* Nama Utama */}
                 <h1 className="caslon-font text-4xl leading-[0.9] text-white mb-6">
                     Enda Ayu <br />
-                    <span className="italic">Charissa</span>
+                    <span className="italic caslon-font">Charissa</span>
                     <span className="block text-sm mt-2 font-sans not-italic opacity-60 tracking-normal">
                         S.M., M.B.A
                     </span>
@@ -724,10 +724,12 @@ export default function Open() {
                 {/* Nama Utama */}
                 <h1 className="caslon-font text-4xl leading-[0.9] text-white mb-6">
                     <div className="">
-                        <span className="groom-name block">Darmawan</span>
+                        <span className="groom-name block caslon-font">
+                            Darmawan
+                        </span>
                     </div>
                     <div className="">
-                        <span className="groom-name italic block">
+                        <span className="groom-name italic block caslon-font">
                             Triansyah
                         </span>
                     </div>
