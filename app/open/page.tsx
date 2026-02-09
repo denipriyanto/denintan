@@ -527,7 +527,10 @@ export default function Open() {
                     playsInline
                     className="w-full h-full object-cover"
                 >
-                    <source src="/PREWED_VIDEO.MP4" type="video/mp4" />
+                    <source
+                        src="https://res.cloudinary.com/deniking/video/upload/v1770662632/PREWED_VIDEO_copy_zzratt.mp4"
+                        type="video/mp4"
+                    />
                     Your browser does not support the video tag.
                 </video>
                 <div
