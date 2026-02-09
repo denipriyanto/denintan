@@ -2,6 +2,7 @@ import "./globals.css";
 import Header from "./components/Header";
 import { AudioProvider } from "./context/audioContext";
 import SmoothScroll from "./components/SmoothScroll";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default function RootLayout({
     children,
@@ -20,6 +21,7 @@ export default function RootLayout({
                             </main>
                         </SmoothScroll>
                     </AudioProvider>
+                    <SpeedInsights />
                 </div>
             </body>
         </html>
