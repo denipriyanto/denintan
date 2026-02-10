@@ -11,8 +11,8 @@ export const useAudio = () => useContext(AudioContextApp);
 export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const loopStart = 19;
-    const loopEnd = 62;
+    const loopStart = 0;
+    const loopEnd = 36;
 
     useEffect(() => {
         const shouldAutoPlay =
@@ -24,7 +24,7 @@ export const AudioProvider = ({ children }: { children: React.ReactNode }) => {
 
     const initAudio = () => {
         if (!audioRef.current) {
-            const audio = new Audio("/sounds.mp3");
+            const audio = new Audio("/Andmesh_anugerah_terindah.mp3");
             audioRef.current = audio;
 
             audio.addEventListener("timeupdate", () => {

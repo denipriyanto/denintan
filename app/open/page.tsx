@@ -11,6 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 type Ucapan = {
     name: string;
     message: string;
+    attendance: string;
     timestamp: string;
 };
 
@@ -32,6 +33,8 @@ export default function Open() {
     const containerProfileManRef = useRef(null);
     const brideRef = useRef(null);
     const groomRef = useRef(null);
+
+    const [attendance, setAttendance] = useState("");
 
     // Audio Effect
     const audioRef = useRef<HTMLAudioElement>(null);
@@ -405,6 +408,7 @@ export default function Open() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        if (!attendance) return alert("Pilih status kehadiran dulu ya!");
 
         gsap.to(".wish-card:first-child", {
             scale: 1.05,
@@ -418,16 +422,16 @@ export default function Open() {
             const res = await fetch("/api/postUcapan", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, message }),
+                body: JSON.stringify({ name, message, attendance }),
             });
 
             if (res.ok) {
                 setName("");
                 setMessage("");
-
+                setAttendance("");
                 fetchData();
             } else {
-                alert("Gagal mengirim ucapan.");
+                alert("Waduh, koneksi ke buku tamu lagi sibuk. Coba lagi ya!");
             }
         } catch (err) {
             console.log(err);
@@ -590,7 +594,7 @@ export default function Open() {
                         <div className="title-name">
                             <h1 className="font-serif text-40 italic leading-none">
                                 Enda & <br />
-                                Mawan
+                                Darma
                             </h1>
                         </div>
                         <div className="title-second"></div>
@@ -651,8 +655,8 @@ export default function Open() {
                 </span>
 
                 {/* Nama Utama */}
-                <h1 className="caslon-font text-4xl leading-[0.9] text-white mb-6">
-                    Enda Ayu <br />
+                <h1 className="caslon-font font-normal text-4xl leading-[0.9] text-white mb-6">
+                    <span className="caslon-font italic">Enda Ayu</span> <br />
                     <span className="italic caslon-font">Charissa</span>
                     <span className="block text-sm mt-2 font-sans not-italic opacity-60 tracking-normal">
                         S.M., M.B.A
@@ -727,7 +731,7 @@ export default function Open() {
                 {/* Nama Utama */}
                 <h1 className="caslon-font text-4xl leading-[0.9] text-white mb-6">
                     <div className="">
-                        <span className="groom-name block caslon-font">
+                        <span className="groom-name block caslon-font italic">
                             Darmawan
                         </span>
                     </div>
@@ -807,25 +811,21 @@ export default function Open() {
 
                         {/* Details */}
                         <div className="flex flex-col gap-[28px] flex-1 px-4 my-12">
-                            {["Day", "Akad Nikah", "Resepsi"].map(
-                                (label, index) => (
-                                    <div
-                                        key={index}
-                                        className="event-detail-item flex flex-col gap-2 flex-wrap items-center justify-between"
-                                    >
-                                        <div className="self-start caslon-font text-xl text-neutral-600 italic">
-                                            <p>{label}</p>
-                                        </div>
-                                        <p className="self-end caslon-font text-3xl italic">
-                                            {label === "Day"
-                                                ? "Minggu 19.04.2026"
-                                                : label === "Akad Nikah"
-                                                ? "09.00"
-                                                : "12.00 - 14.00"}
-                                        </p>
+                            {["Day", "Resepsi"].map((label, index) => (
+                                <div
+                                    key={index}
+                                    className="event-detail-item flex flex-col gap-2 flex-wrap items-center justify-between"
+                                >
+                                    <div className="self-start caslon-font text-xl text-neutral-600 italic">
+                                        <p>{label}</p>
                                     </div>
-                                )
-                            )}
+                                    <p className="self-end caslon-font text-3xl italic">
+                                        {label === "Day"
+                                            ? "Minggu 19.04.2026"
+                                            : "12.00 - 14.00"}
+                                    </p>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
@@ -1050,6 +1050,7 @@ export default function Open() {
                 <div className="wish-header text-center mb-8">
                     <h1 className="font-serif text-4xl leading-tight text-white drop-shadow-md">
                         Ucapan & Doa
+                        <br /> RSVP Kehadiran
                     </h1>
                     <p className="text-white/60 text-16 mt-2 font-light italic">
                         Berikan doa restu untuk kedua mempelai
@@ -1059,6 +1060,37 @@ export default function Open() {
                 {/* Container Form */}
                 <div className="wish-form w-full max-w-md bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-xl">
                     <form onSubmit={handleSubmit} className="space-y-5">
+                        <div>
+                            <label className="text-xs font-semibold uppercase tracking-widest text-white/70 ml-1">
+                                Konfirmasi Kehadiran
+                            </label>
+                            <div className="mt-2 grid grid-cols-2 gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setAttendance("Hadir")}
+                                    className={`py-3 rounded-xl border text-xs font-bold transition-all ${
+                                        attendance === "Hadir"
+                                            ? "bg-white text-black border-white"
+                                            : "bg-white/10 text-white border-white/10 hover:bg-white/20"
+                                    }`}
+                                >
+                                    SAYA AKAN HADIR
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setAttendance("Tidak Hadir")}
+                                    className={`py-3 rounded-xl border text-xs font-bold transition-all ${
+                                        attendance === "Tidak Hadir"
+                                            ? "bg-white text-black border-white"
+                                            : "bg-white/10 text-white border-white/10 hover:bg-white/20"
+                                    }`}
+                                >
+                                    MAAF, BERHALANGAN
+                                </button>
+                            </div>
+                            {/* Input tersembunyi agar validasi required tetap jalan jika perlu */}
+                            <input type="hidden" value={attendance} required />
+                        </div>
                         <div>
                             <label className="text-xs font-semibold uppercase tracking-widest text-white/70 ml-1">
                                 Nama Anda
@@ -1131,22 +1163,59 @@ export default function Open() {
 
                 {/* Container List Ucapan (Timeline Style) */}
                 <div className="wish-list-container mt-10 w-full max-w-md">
-                    <h3 className="text-white/80 text-sm font-medium mb-4 px-2">
-                        {data.length} Pesan Tersimpan
-                    </h3>
+                    <div className="flex items-center justify-between mb-6 px-2">
+                        <div className="space-y-1">
+                            <h3 className="text-white/80 text-sm font-medium">
+                                {data.length} Pesan Tersimpan
+                            </h3>
+                            <div className="w-12 h-[1px] bg-white/20"></div>
+                        </div>
+
+                        {/* Badge Total Hadir */}
+                        <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl backdrop-blur-sm text-center">
+                            <span className="block text-[10px] uppercase tracking-[0.2em] text-white/40 mb-1">
+                                Konfirmasi Hadir
+                            </span>
+                            <span className="text-xl caslon-font italic text-white">
+                                {
+                                    data.filter(
+                                        (item) => item.attendance === "Hadir"
+                                    ).length
+                                }
+                            </span>
+                            <span className="text-[10px] text-white/40 ml-1">
+                                Orang
+                            </span>
+                        </div>
+                    </div>
                     <div className="max-h-[400px] overflow-y-auto space-y-4 pr-2 custom-scrollbar">
                         {[...data].reverse().map((item, idx) => (
                             <div
                                 key={idx}
                                 className="wish-card bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-xl transition-all hover:bg-white/10"
                             >
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-gray-400 to-gray-200 flex items-center justify-center text-gray-800 font-bold text-xs">
-                                        {item.name.charAt(0).toUpperCase()}
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-gray-400 to-gray-200 flex items-center justify-center text-gray-800 font-bold text-xs uppercase">
+                                            {item.name.charAt(0)}
+                                        </div>
+                                        <span className="text-sm font-bold text-white tracking-wide">
+                                            {item.name}
+                                        </span>
                                     </div>
-                                    <span className="text-sm font-bold text-white tracking-wide">
-                                        {item.name}
-                                    </span>
+
+                                    {/* Badge Status Kehadiran */}
+                                    {item.attendance && (
+                                        <span
+                                            className={`text-[9px] px-2 py-1 rounded-full border uppercase tracking-tighter ${
+                                                item.attendance === "Hadir"
+                                                    ? "border-green-400/50 text-green-400 bg-green-400/10"
+                                                    : "border-red-400/50 text-red-400 bg-red-400/10"
+                                            }`}
+                                        >
+                                            {item.attendance}
+                                        </span>
+                                    )}
                                 </div>
                                 <p className="text-white/70 text-sm leading-relaxed italic font-light">
                                     {`"${item.message}"`}
@@ -1195,7 +1264,7 @@ export default function Open() {
                             Salam
                         </h2>
                         <h1 className="caslon-font text-40 italic leading-none text-center mb-24">
-                            Enda & Mawan
+                            Enda & Darma
                         </h1>
                     </div>
                 </div>

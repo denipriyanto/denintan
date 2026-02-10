@@ -15,7 +15,7 @@ export default function HomeClient() {
     charRefs.current = [];
     const charRefs2 = useRef<HTMLSpanElement[]>([]);
     charRefs2.current = [];
-    const textTitle = "Enda & Mawan";
+    const textTitle = "Enda & Darma";
     const invTitle = `Wedding Invitation`;
     const buttonRef = useRef<HTMLDivElement>(null);
     const opacityRef = useRef<HTMLDivElement>(null);
