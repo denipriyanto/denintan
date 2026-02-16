@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import HomeClient from "./components/HomeClient";
+import HomeClient from "../components/HomeClient";
 
 type Props = {
     params: Promise<{ slug: string }>;
